@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "451418365198",
+    "project_id": "pinktrisha-flutter-app",
+    "storage_bucket": "pinktrisha-flutter-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:451418365198:android:9c84f879982f021eab0b5f",
+        "android_client_info": {
+          "package_name": "com.pinktrisha"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "451418365198-f5m73kls5n8huphhhfs58jtjjlu0ee7g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pinktrisha",
+            "certificate_hash": "a13ed6c21aacda5bfb1c3f3d506fd5377de7200b"
+          }
+        },
+        {
+          "client_id": "451418365198-m803jvsvhhkh610qcm2kqhmt4gm9a8dt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pinktrisha",
+            "certificate_hash": "2816b12c7bd62597f6b63a14f2dcef544f52462e"
+          }
+        },
+        {
+          "client_id": "451418365198-558npo7mp37gl9htj26u1afj5kllhcl0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyVr33PaR-OB8Yk_AFcX8DbJEROkDxgJQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "451418365198-558npo7mp37gl9htj26u1afj5kllhcl0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

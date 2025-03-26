@@ -1,0 +1,32 @@
+buildscript {
+    ext.kotlin_version = '1.9.10'
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.2.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        // Add the following line to apply the Flutter plugin declaratively
+        classpath 'com.google.gms:google-services:4.3.14'
+    }
+}
+
+// Remove the subprojects block that references ':app'
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.buildDir = '../build'
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+
+// Remove the subprojects block that references ':app'
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}
