@@ -21,6 +21,7 @@ import 'package:pink_by_trisha_app/utils/styles/k_colors.dart';
 import '../../module/dashboard/sub_modules/home/sub_modules/product/model/product_list_response.dart';
 
 class GlobalProductCard extends StatefulWidget {
+
   const GlobalProductCard(
       {super.key,
       this.imageUrl,
@@ -39,7 +40,7 @@ class GlobalProductCard extends StatefulWidget {
       required this.categoryId,
       required this.vendorId,
       required this.paymentType,
-      required this.isInStack,
+      required this.isInStock,
       required this.currentAttributeValueId});
 
   final int id;
@@ -57,7 +58,7 @@ class GlobalProductCard extends StatefulWidget {
   final double price;
   final int points;
   final bool isPreorder;
-  final bool isInStack;
+  final bool isInStock;
   final LoaderScreenType loaderScreenType;
   final List<SelectedAttributeModel> currentAttributeValueId;
 
@@ -123,9 +124,14 @@ class _GlobalProductCardState extends State<GlobalProductCard> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                widget.paymentType == "DVP"
+                                StockStatusWidget(
+                                  paymentType: widget.paymentType,
+                                  isInStock: widget.isInStock,
+                                ),
+
+                                /*widget.paymentType == "DVP"
                                     ? PreorderShow()
-                                    : InStockShow(isInStock: widget.isInStack),
+                                    : InStockShow(isInStock: widget.isInStack),*/
                                 SizedBox(
                                   height: 2,
                                 ),
@@ -137,18 +143,6 @@ class _GlobalProductCardState extends State<GlobalProductCard> {
                               ],
                             ),
                           ),
-                          // !widget.isPreorder
-                          //     ?
-                          //     Positioned(
-                          //         top: 0,
-                          //         left: 0,
-                          //         child: DiscountShow(
-                          //             discount: widget.price == 0
-                          //                 ? 100
-                          //                 : calculateDiscountPercent(
-                          //                     widget.price, widget.offerPrice)),
-                          //       )
-                          //     : const PreorderShow(),
                           Positioned(
                               top: 0,
                               right: 0,
@@ -197,17 +191,6 @@ class _GlobalProductCardState extends State<GlobalProductCard> {
                                   ),
                                 ),
                               )),
-                          // widget.isPreorder
-                          //     ? Positioned(
-                          //         top: 0,
-                          //         left: 0,
-                          //         child: GlobalSvgLoader(
-                          //             // imageFor: imageUrl == null
-                          //             //     ? ImageFor.asset
-                          //             //     : ImageFor.network,
-                          //             imagePath: KAssetName
-                          //                 .icPreorderLogosvg.imagePath))
-                          //     : const SizedBox.shrink(),
                         ],
                       )),
                   const VerticalSpace(),
@@ -480,5 +463,27 @@ class DiscountShow extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class StockStatusWidget extends StatelessWidget {
+  final String paymentType;
+  final bool isInStock;
+
+  const StockStatusWidget({
+    super.key,
+    required this.paymentType,
+    required this.isInStock,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (paymentType == "DVP") {
+      return const PreorderShow(); // Show "Preorder"
+    } else if (paymentType == "COD" && !isInStock) {
+      return const InStockShow(isInStock: false); // Show "Out of stock"
+    } else {
+      return const InStockShow(isInStock: true); // Show "In stock"
+    }
   }
 }

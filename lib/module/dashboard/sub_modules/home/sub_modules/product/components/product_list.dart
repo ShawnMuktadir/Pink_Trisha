@@ -88,7 +88,7 @@ class ProductList extends StatelessWidget {
                                     paymentType: state.products[productIndex]
                                             .paymentType ??
                                         "",
-                                    isInStack: state.products[productIndex]
+                                    isInStock: state.products[productIndex]
                                                 .quantity !=
                                             null &&
                                         state.products[productIndex].quantity !=

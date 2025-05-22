@@ -138,7 +138,7 @@ class HomeExploreProducts extends ConsumerWidget {
                           categoryId: product.categoryId ?? 1,
                           vendorId: product.vendorId,
                           paymentType: product.paymentType ?? "",
-                          isInStack:
+                          isInStock:
                               product.quantity != null && product.quantity != 0,
                           currentAttributeValueId: [],
                         ),

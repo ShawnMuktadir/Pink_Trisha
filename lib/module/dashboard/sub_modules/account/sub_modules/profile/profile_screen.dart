@@ -17,7 +17,8 @@ import 'package:pink_by_trisha_app/utils/styles/k_colors.dart';
 import 'controller/update_profile_controller.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key, required this.profileData}) : super(key: key);
+  const ProfileScreen({super.key, required this.profileData});
+
   final ProfileData profileData;
 
   @override
@@ -25,12 +26,14 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final TextEditingController emailController = TextEditingController();
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     final controller = context.read(profileController.notifier);
     final updateController = context.read(updateProfileController.notifier);
+
     Future(() async {
       await controller.getProfile();
       updateController.setProfileData(widget.profileData);
@@ -76,7 +79,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             const AccountSubtitle(
                               hasAddress: false,
                             ),
-                            const PhoneNumber(),
+                            if (widget.profileData.phoneNumber?.isNotEmpty ??
+                                false) ...[
+                              PhoneNumber(),
+                            ],
                             const ProfileEditTitle(),
                             const ProfileAvatar(),
                             Form(
@@ -129,7 +135,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   await updateController
                                       .reqUpdateProfile(context);
                                 },
-                                buttonText: "Update Account")
+                                buttonText: "Update Account"),
+                            const VerticalSpace(
+                              height: 36,
+                            ),
+                            GlobalButton(
+                              isLoading: updateState.isDeleteBtnLoading,
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              onPressed: () async {
+                                showDeleteAccountDialog(context, ref);
+                              },
+                              buttonText: "Delete Account",
+                            )
                           ],
                         ),
                       ),
@@ -142,5 +159,89 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       );
     });
+  }
+
+  void showDeleteAccountDialog(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text('Are you sure you want to delete your account?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(dialogContext).pop();
+                showAccountDeletionDialog(context, ref, widget.profileData);
+              },
+              child: const Text(
+                'Yes',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void showAccountDeletionDialog(
+      BuildContext context, WidgetRef ref, ProfileData data) {
+    final emailController = TextEditingController(text: data.email);
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Text('Account Deletion'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 12),
+              TextFormField(
+                controller: emailController,
+                readOnly: true,
+                // You can set this to false if you want the user to type manually
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(
+                    Icons.email,
+                    color: Color(0xffF554B1),
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              )
+            ],
+          ),
+          actions: [
+            GlobalButton(
+              onPressed: () {
+                if (emailController.text.trim() == data.email) {
+                  Navigator.of(dialogContext).pop();
+                  ref
+                      .read(updateProfileController.notifier)
+                      .deleteAccount(context, data.id!, data.email!);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Email does not match')),
+                  );
+                }
+              },
+              buttonText: 'Confirm Delete',
+            ),
+          ],
+        );
+      },
+    );
   }
 }

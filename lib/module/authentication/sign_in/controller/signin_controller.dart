@@ -90,7 +90,7 @@ class SignInController extends StateNotifier<SignInState> {
   }
 
   /// ==@ Function
-  final ApiClient _apiClint = ApiClient();
+  final ApiClient _apiClient = ApiClient();
 
   Future<void> reqSignInWithGoogle() async {
     try {
@@ -169,7 +169,7 @@ class SignInController extends StateNotifier<SignInState> {
       print("Step 12: API request body -> $apiRequestBody");
 
       // Call API
-      await _apiClint.request(
+      await _apiClient.request(
         url: AppUrl.signInSocial.url,
         method: MethodType.POST,
         data: apiRequestBody,
@@ -431,7 +431,7 @@ class SignInController extends StateNotifier<SignInState> {
       }
 
       SignInData signInData = SignInData();
-      await _apiClint.request(
+      await _apiClient.request(
           url: AppUrl.signInUrl.url,
           method: MethodType.POST,
           token: signInData.accessToken,
@@ -488,7 +488,7 @@ class SignInController extends StateNotifier<SignInState> {
       if (forgotPasswordFormKey.currentState!.validate()) {
         log('forgotPasswordEmailCon: ${state.forgotPasswordEmailCon.text.trim()}');
       }
-      await _apiClint.request(
+      await _apiClient.request(
           url: AppUrl.resetPasswordInit.url,
           method: MethodType.POST,
           // token: signInData.accessToken,
@@ -536,7 +536,7 @@ class SignInController extends StateNotifier<SignInState> {
         log('otpCon: ${state.otpCon.text.trim()}');
         log('otpEmailCon: ${state.otpEmailCon.text.trim()}');
       }
-      await _apiClint.request(
+      await _apiClient.request(
           url: AppUrl.resetPasswordSubmit.url,
           method: MethodType.POST,
           // token: signInData.accessToken,

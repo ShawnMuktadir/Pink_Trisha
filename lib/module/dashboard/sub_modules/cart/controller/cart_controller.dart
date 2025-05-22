@@ -21,7 +21,6 @@ import 'package:pink_by_trisha_app/module/dashboard/sub_modules/home/sub_modules
 import 'package:pink_by_trisha_app/utils/app_routes.dart';
 import 'package:pink_by_trisha_app/utils/enum.dart';
 import 'package:pink_by_trisha_app/utils/navigation.dart';
-import 'package:pink_by_trisha_app/utils/network_connection.dart';
 import 'package:pink_by_trisha_app/utils/view_util.dart';
 
 final cartController =
@@ -74,7 +73,7 @@ class CartController extends StateNotifier<CartState> {
 
   bool isLive = false;
 
-  Future<void> sslCommerzCall({
+  /*Future<void> sslCommerzCall({
     required BuildContext mContext,
     required int orderId,
   }) async {
@@ -110,7 +109,7 @@ class CartController extends StateNotifier<CartState> {
       // Debugging response
       debugPrint("Raw Response Before Parsing: ${result.toJson()}");
 
-      if (result.status == null) {
+      if (result == null || result.status == null) {
         debugPrint("Transaction status is null. Check your API credentials.");
         Fluttertoast.showToast(
           msg: "Transaction Error: No response from server",
@@ -130,7 +129,6 @@ class CartController extends StateNotifier<CartState> {
       } else {
         // Success Case
         debugPrint("Success! Status: ${result.status} | trx: ${result.tranId}");
-
         await paymentSuccess(orderId: orderId, context: mContext);
         state = state.copyWith(
           trxID: result.tranId,
@@ -156,6 +154,145 @@ class CartController extends StateNotifier<CartState> {
     });
 
     clearAllFromCart();
+  }*/
+
+  Future<void> sslCommerzCall({
+    required BuildContext mContext,
+    required int orderId,
+  }) async {
+    bool isLive = AppUrl.base.url == "https://core.pinktrisha.com/";
+
+    state = state.copyWith(isSSLLoading: true);
+
+    final String userId = PrefHelper.getString(AppConstant.USER_ID.key);
+
+    Sslcommerz sslcommerz = Sslcommerz(
+      initializer: SSLCommerzInitialization(
+        currency: SSLCurrencyType.BDT,
+        product_category: "Food",
+        sdkType: isLive ? SSLCSdkType.LIVE : SSLCSdkType.TESTBOX,
+        store_id: isLive
+            ? AppConstant.SSL_STORE_ID_LIVE.key
+            : AppConstant.STORE_ID.key,
+        store_passwd: isLive
+            ? AppConstant.SSL_STORE_PASSWORD_LIVE.key
+            : AppConstant.STORE_PASSWORD.key,
+        total_amount: state.subtotal,
+        tran_id: "REF${DateTime.now().millisecondsSinceEpoch}$userId",
+      ),
+    );
+
+    SSLCTransactionInfoModel? transaction;
+    bool paymentWasSuccessful = false;
+
+    try {
+      debugPrint("Launching SSLCommerz payment...");
+      var response = await sslcommerz.payNow();
+      debugPrint("Received response: $response");
+
+      if (response == null) {
+        debugPrint("Null response received. Payment might have failed silently.");
+        Fluttertoast.showToast(
+          msg: "Payment could not be started. Please try again.",
+          backgroundColor: Colors.orange,
+          textColor: Colors.white,
+        );
+        state = state.copyWith(isSSLLoading: false);
+        return;
+      }
+
+      debugPrint("Raw Response: $response");
+      debugPrint("Response Type: ${response.runtimeType}");
+
+      if (response is SSLCTransactionInfoModel) {
+        transaction = response;
+        debugPrint("Transaction Parsed: ${jsonEncode(transaction.toJson())}");
+      } else {
+        debugPrint("Unexpected response type: ${response.runtimeType}");
+        Fluttertoast.showToast(
+          msg: "Unexpected response from payment gateway.",
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+        state = state.copyWith(isSSLLoading: false);
+        return;
+      }
+
+      final status = transaction.status?.toLowerCase();
+      debugPrint("Transaction Status: $status");
+
+      if (status == null) {
+        debugPrint("Transaction status is null. Possibly server issue.");
+        Fluttertoast.showToast(
+          msg: "Transaction Error: No response from server.",
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+      } else if (status == "failed") {
+        debugPrint("Transaction Failed: ${jsonEncode(transaction.toJson())}");
+        await paymentFailed(orderId);
+        Fluttertoast.showToast(
+          msg: "Your payment failed. Please try again.",
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+      } else if (status == "closed") {
+        debugPrint("Transaction closed by user.");
+        ViewUtil.toast(msg: "Transaction was closed before completion.");
+      } else {
+        debugPrint("Payment Successful!");
+        debugPrint("Transaction ID: ${transaction.tranId}");
+        debugPrint("Card Number: ${transaction.cardNo}");
+        await paymentSuccess(orderId: orderId, context: mContext);
+
+        state = state.copyWith(
+          trxID: transaction.tranId,
+          trxNumber: transaction.cardNo,
+        );
+
+        paymentWasSuccessful = true;
+      }
+    } catch (e, s) {
+      debugPrint("Exception occurred: $e");
+      debugPrint("Stacktrace: $s");
+      Fluttertoast.showToast(
+        msg: "Payment Error: ${e.toString()}",
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+
+      showDialog(
+        context: mContext,
+        builder: (context) => AlertDialog(
+          title: Text("Payment Error"),
+          content: Text("Something went wrong while initiating the payment. Please check your internet or try again."),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text("OK"),
+            ),
+          ],
+        ),
+      );
+    }
+
+    state = state.copyWith(isSSLLoading: false);
+
+    if (paymentWasSuccessful) {
+      debugPrint("Navigating to Order Confirmation...");
+      Future(() {
+        Navigation.popUntil(mContext, 3);
+        Navigation.push(
+          mContext,
+          appRoutes: AppRoutes.orderConfirm,
+          arguments: orderId.toString(),
+        );
+      });
+
+      clearAllFromCart();
+    } else {
+      debugPrint("Payment failed or was cancelled. Navigation skipped.");
+    }
   }
 
   void clearPayments() {
@@ -243,7 +380,8 @@ class CartController extends StateNotifier<CartState> {
       List<OrderCreateItem> orderItems = [];
 
       for (var e in state.cartProducts) {
-        Map<String, String> resultMap = convertListToMap(e.currentAttributeValueId);
+        Map<String, String> resultMap =
+            convertListToMap(e.currentAttributeValueId);
 
         orderItems.add(OrderCreateItem(
           quantity: e.quantity,
@@ -268,10 +406,11 @@ class CartController extends StateNotifier<CartState> {
         ));
       }
 
-      print("\nAll cart products processed. Total order items: ${orderItems.length}");
+      print(
+          "\nAll cart products processed. Total order items: ${orderItems.length}");
 
       // Fix: Use the selected payment type from state instead of recalculating
-      String finalPaymentType = state.paymentType.name?? "COD";
+      String finalPaymentType = state.paymentType.name ?? "COD";
       print("Final payment type selected: $finalPaymentType");
 
       OrderCreateData orderData = OrderCreateData(
@@ -296,7 +435,8 @@ class CartController extends StateNotifier<CartState> {
         discountAmount: state.discount.toDouble(),
         note: "",
         orderItems: orderItems,
-        paymentType: finalPaymentType, // Use the dynamically determined payment type
+        paymentType: finalPaymentType,
+        // Use the dynamically determined payment type
         currencyType: state.currencyType ?? "",
         couponId: null,
         rewardCheck: false,
@@ -319,10 +459,13 @@ class CartController extends StateNotifier<CartState> {
             print("Payment type is Cash on Delivery (COD).");
             ViewUtil.SSLSnackbar("Order created successfully!");
             Navigation.popUntil(context, 3);
-            Navigation.push(context, appRoutes: AppRoutes.orderConfirm, arguments: response.data["data"]["id"].toString());
+            Navigation.push(context,
+                appRoutes: AppRoutes.orderConfirm,
+                arguments: response.data["data"]["id"].toString());
             clearAllFromCart();
           } else {
-            print("Payment type is Online (DVP), proceeding with SSLCommerz payment.");
+            print(
+                "Payment type is Online (DVP), proceeding with SSLCommerz payment.");
             int? orderId = response.data["data"]["orderId"];
             if (orderId != null) {
               sslCommerzCall(orderId: orderId, mContext: context);
@@ -408,10 +551,11 @@ class CartController extends StateNotifier<CartState> {
           .toList();
 
       double newSubtotal =
-      calculateSubtotal(cartProducts); // Correct subtotal with offer prices
+          calculateSubtotal(cartProducts); // Correct subtotal with offer prices
 
       print("error");
-      print("error "+PrefHelper.getBool(AppConstant.IS_SWITCHED.key).toString());
+      print("error " +
+          PrefHelper.getBool(AppConstant.IS_SWITCHED.key).toString());
 
       // Restore payment switch value
       final bool isPayOnline = PrefHelper.getBool(AppConstant.IS_SWITCHED.key);
@@ -420,10 +564,10 @@ class CartController extends StateNotifier<CartState> {
           : PaymentType(title: "Cash on Delivery", name: "COD", index: 1);
 
       state = state.copyWith(
-        cartProducts: cartProducts,
-        subtotal: newSubtotal,
-        paymentType: paymentType // Restore saved payment type here
-      );
+          cartProducts: cartProducts,
+          subtotal: newSubtotal,
+          paymentType: paymentType // Restore saved payment type here
+          );
 
       print("Updated Cart Subtotal: $newSubtotal");
     } catch (e) {
@@ -447,7 +591,8 @@ class CartController extends StateNotifier<CartState> {
       await getCartProducts(); // This will refresh cart state
 
       // Update state with new cart and recalculate `hasOnlinePayment`
-      bool hasOnlinePayment = updatedCartProducts.any((item) => item.paymentType == "DVP");
+      bool hasOnlinePayment =
+          updatedCartProducts.any((item) => item.paymentType == "DVP");
 
       state = state.copyWith(
         cartProducts: updatedCartProducts,
@@ -455,11 +600,13 @@ class CartController extends StateNotifier<CartState> {
         isLoading: false,
         paymentType: hasOnlinePayment
             ? PaymentType(title: "Pay Online", name: "DVP", index: 0)
-            : PaymentType(title: "Cash on Delivery", name: "COD", index: 1), // Auto-update payment type
+            : PaymentType(
+                title: "Cash on Delivery",
+                name: "COD",
+                index: 1), // Auto-update payment type
       );
       await PrefHelper.setBool(AppConstant.IS_SWITCHED.key, hasOnlinePayment);
       print("Updated Cart with hasOnlinePayment: $hasOnlinePayment");
-
     } on Exception catch (e) {
       print("Error in updateCartProducts: $e");
     }

@@ -7,6 +7,7 @@ class UpdateProfileState {
   final TextEditingController phoneCon;
   final bool isButtonEnabled;
   final bool isUpdateBtnLoading;
+  final bool isDeleteBtnLoading;
 
   // Constructor
   UpdateProfileState(
@@ -15,7 +16,8 @@ class UpdateProfileState {
       required this.emailCon,
       required this.phoneCon,
       required this.isButtonEnabled,
-      required this.isUpdateBtnLoading});
+      required this.isUpdateBtnLoading,
+      required this.isDeleteBtnLoading});
 
   // CopyWith method
   UpdateProfileState copyWith(
@@ -24,13 +26,16 @@ class UpdateProfileState {
       TextEditingController? emailCon,
       TextEditingController? phoneCon,
       bool? isButtonEnabled,
-      bool? isUpdateBtnLoading}) {
+      bool? isUpdateBtnLoading,
+      bool? isDeleteBtnLoading}) {
     return UpdateProfileState(
-        firstNameCon: firstNameCon ?? this.firstNameCon,
-        lastNameCon: lastNameCon ?? this.lastNameCon,
-        emailCon: emailCon ?? this.emailCon,
-        phoneCon: phoneCon ?? this.phoneCon,
-        isButtonEnabled: isButtonEnabled ?? this.isButtonEnabled,
-        isUpdateBtnLoading: isUpdateBtnLoading ?? this.isUpdateBtnLoading);
+      firstNameCon: firstNameCon ?? this.firstNameCon,
+      lastNameCon: lastNameCon ?? this.lastNameCon,
+      emailCon: emailCon ?? this.emailCon,
+      phoneCon: phoneCon ?? this.phoneCon,
+      isButtonEnabled: isButtonEnabled ?? this.isButtonEnabled,
+      isUpdateBtnLoading: isUpdateBtnLoading ?? this.isUpdateBtnLoading,
+      isDeleteBtnLoading: isDeleteBtnLoading ?? this.isDeleteBtnLoading,
+    );
   }
 }

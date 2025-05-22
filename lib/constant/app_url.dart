@@ -40,6 +40,7 @@ enum AppUrl {
   orderDetails,
   resetPasswordInit,
   resetPasswordSubmit,
+  deleteAccountUrl,
 }
 
 extension AppUrlExtention on AppUrl {
@@ -146,6 +147,8 @@ extension AppUrlExtention on AppUrl {
         return 'public/api/v1/auth/reset-password-init';
       case AppUrl.resetPasswordSubmit:
         return 'public/api/v1/auth/reset-password-submit';
+      case AppUrl.deleteAccountUrl:
+        return 'customer/api/v1/customer-account-deletion';
       default:
     }
     return "";
