@@ -5,9 +5,74 @@ import 'package:pink_by_trisha_app/module/dashboard/sub_modules/account/sub_modu
 import 'package:pink_by_trisha_app/utils/styles/k_colors.dart';
 import 'package:pink_by_trisha_app/utils/styles/k_text_style.dart';
 
-class AccountSubtitle extends ConsumerWidget {
+class AccountSubtitle extends ConsumerStatefulWidget {
   const AccountSubtitle({super.key, this.hasAddress = true});
+
   final bool hasAddress;
+
+  @override
+  ConsumerState<AccountSubtitle> createState() => _AccountSubtitleState();
+}
+
+class _AccountSubtitleState extends ConsumerState<AccountSubtitle> {
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(profileController);
+    final addressState = ref.watch(addAddressController);
+    return Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(
+            text: '${state.fetchProfile?.firstName ?? ""} '
+                '${state.fetchProfile?.lastName ?? ""},',
+            style: KTextStyle.customTextStyle(
+              height: 0.09,
+              color: KColor.deep2.color,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          TextSpan(
+            text: ' ',
+            style: KTextStyle.customTextStyle(
+              height: 0.09,
+              color: KColor.deepGrey.color,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          widget.hasAddress
+              ? TextSpan(
+                  text: '${state.fetchProfile?.email ?? ""}.',
+                  style: KTextStyle.customTextStyle(
+                    height: 0.09,
+                    color: KColor.deepGrey.color,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                )
+              : TextSpan(
+                  text: state.fetchProfile?.email ?? "",
+                  style: KTextStyle.customTextStyle(
+                    height: 0.09,
+                    color: KColor.deepGrey.color,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+        ],
+      ),
+      softWrap: true,
+    );
+  }
+}
+
+/*class AccountSubtitle extends ConsumerWidget {
+  const AccountSubtitle({super.key, this.hasAddress = true});
+
+  final bool hasAddress;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(profileController);
@@ -16,8 +81,8 @@ class AccountSubtitle extends ConsumerWidget {
       TextSpan(
         children: [
           TextSpan(
-            text:
-                '${state.fetchProfile?.firstName ?? ""} ${state.fetchProfile?.lastName ?? ""},',
+            text: '${state.fetchProfile?.firstName ?? ""} '
+                '${state.fetchProfile?.lastName ?? ""},',
             style: KTextStyle.customTextStyle(
               height: 0.09,
               color: KColor.deep2.color,
@@ -58,4 +123,4 @@ class AccountSubtitle extends ConsumerWidget {
       softWrap: true,
     );
   }
-}
+}*/

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pink_by_trisha_app/module/dashboard/sub_modules/account/sub_modules/profile/controller/profile_controller.dart';
@@ -15,6 +16,7 @@ import '../../../../../../../data_provider/pref_helper.dart';
 import '../../../../../../../data_provider/storage_controller.dart';
 import '../../../../../../../utils/app_routes.dart';
 import '../../../../../../../utils/navigation.dart';
+import '../../../../cart/controller/cart_controller.dart';
 import '../model/delete_profile_response.dart';
 import '../model/update_profile_response.dart';
 
@@ -42,6 +44,28 @@ class UpdateProfileController extends StateNotifier<UpdateProfileState> {
     state.phoneCon.addListener(() {
       checkButtonStatus();
     });
+  }
+
+  bool _isSynced = false;
+
+  void syncWithProfile(ProfileData profile) {
+    // Only update controllers if not synced yet or data changed
+    if (!_isSynced ||
+        state.firstNameCon.text != (profile.firstName ?? '') ||
+        state.lastNameCon.text != (profile.lastName ?? '') ||
+        state.phoneCon.text != (profile.phoneNumber ?? '') ||
+        state.emailCon.text != (profile.email ?? '')) {
+      state.firstNameCon.text = profile.firstName ?? '';
+      state.lastNameCon.text = profile.lastName ?? '';
+      state.phoneCon.text = profile.phoneNumber ?? '';
+      state.emailCon.text = profile.email ?? '';
+      _isSynced = true;
+    }
+  }
+
+  // Make sure to reset _isSynced if needed on logout or similar
+  void resetSync() {
+    _isSynced = false;
   }
 
   checkButtonStatus() {
@@ -75,36 +99,39 @@ class UpdateProfileController extends StateNotifier<UpdateProfileState> {
         state = state.copyWith(isUpdateBtnLoading: false);
         return;
       }
-      UpdateProfileResponse? updateProfileResponse;
-      updateProfileResponse = UpdateProfileResponse(
+
+      UpdateProfileResponse updateProfileResponse = UpdateProfileResponse(
         firstName: state.firstNameCon.text.trim(),
         lastName: state.lastNameCon.text.trim(),
         phoneNumber: state.phoneCon.text.trim(),
       );
+
       final token = PrefHelper.getString(AppConstant.TOKEN.key);
-      // log('Error Token: $token');
-
-      // final String? retrievedToken = await PrefHelper.getString(AppConstant.TOKEN.toString());
       print('Update Profile Token get :- $token');
-
       print('Send data is: ${updateProfileResponse.toJson()}');
-      await _apiClient.request(
-          url: AppUrl.updateProfileUrl.url,
-          method: MethodType.PUT,
-          token: PrefHelper.getString(AppConstant.TOKEN.key),
-          data: updateProfileResponse.toJson(),
-          onSuccessFunction: (response) {
-            log('Response: ${jsonEncode(response.data)}');
 
-            if (response.data != null) {
-              'response is: ${jsonEncode(response.data)}'.log();
-              final controller = context.read(profileController.notifier);
-              Future(() async {
-                await controller.getProfile();
-              });
-              ViewUtil.SSLSnackbar("Profile Updated Successfully.");
-            }
-          });
+      await _apiClient.request(
+        url: AppUrl.updateProfileUrl.url,
+        method: MethodType.PUT,
+        token: token,
+        data: updateProfileResponse.toJson(),
+        onSuccessFunction: (response) async {
+          log('Response: ${jsonEncode(response.data)}');
+
+          if (response.data != null) {
+            'response is: ${jsonEncode(response.data)}'.log();
+            final updatedProfile = ProfileModel.fromJson(response.data).data;
+
+            final controller = context.read(profileController.notifier);
+
+            // Directly update the controller's state with new data from update response
+            controller.state =
+                controller.state.copyWith(fetchProfile: updatedProfile);
+
+            ViewUtil.SSLSnackbar("Profile Updated Successfully.");
+          }
+        },
+      );
     } catch (e, s) {
       log("Log Error :-", error: e, stackTrace: s);
     }
@@ -120,8 +147,8 @@ class UpdateProfileController extends StateNotifier<UpdateProfileState> {
       final requestBody = DeleteProfileResponse(
         id: id,
         email: email,
-        password: "",
-        status: "DELETED",
+        /*password: "",
+        status: "DELETED",*/
       );
 
       await _apiClient.request(
@@ -130,11 +157,25 @@ class UpdateProfileController extends StateNotifier<UpdateProfileState> {
         token: token,
         data: requestBody.toJson(),
         onSuccessFunction: (response) async {
-          final result = DeleteProfileResponse.fromJson(response.data['data'] as Map<String, dynamic>);
+          final result = DeleteProfileResponse.fromJson(
+              response.data['data'] as Map<String, dynamic>);
 
           if (result.status == 'DELETED') {
+            // Start blur
+            showBlurOverlay(context);
+
             ViewUtil.SSLSnackbar("We're very sorry to see you go.");
+
             await Future.delayed(const Duration(seconds: 2));
+
+            // Clear cart
+            final cartCon = context.read(cartController.notifier);
+            await cartCon.clearAllFromCart();
+
+            // Remove blur screen
+            Navigator.of(context, rootNavigator: true).pop();
+
+            // Proceed to logout / navigate away
             _handleAccountDeletion(context);
           } else {
             ViewUtil.SSLSnackbar("Account deletion failed. Please try again.");
@@ -153,5 +194,40 @@ class UpdateProfileController extends StateNotifier<UpdateProfileState> {
     await StorageController.setLoggedOut();
     Future(() =>
         Navigation.pushReplacement(context, appRoutes: AppRoutes.dashboard));
+  }
+
+  void showBlurOverlay(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: false,
+      barrierColor: Colors.black.withOpacity(0.3),
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (_, __, ___) {
+        return WillPopScope(
+          onWillPop: () async => false,
+          child: Stack(
+            children: [
+              BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                child: Container(
+                  color: Colors.black.withOpacity(0.2),
+                ),
+              ),
+              const Center(
+                child: CircularProgressIndicator(),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // Call this method from your UI after profile data is fetched
+  void initializeControllers(ProfileData profile) {
+    state.firstNameCon.text = profile.firstName ?? '';
+    state.lastNameCon.text = profile.lastName ?? '';
+    state.phoneCon.text = profile.phoneNumber ?? '';
+    state.emailCon.text = profile.email ?? '';
   }
 }

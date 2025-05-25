@@ -36,16 +36,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     Future(() async {
       await controller.getProfile();
-      updateController.setProfileData(widget.profileData);
+
+      // Now get the fresh profile data from profileController's state:
+      final freshProfile = context.read(profileController).fetchProfile;
+
+      // Update updateProfileController with fresh data
+      updateController.setProfileData(freshProfile!);
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    bool _isInitialized = false;
     return Consumer(builder: (context, ref, child) {
       final state = ref.watch(profileController);
       final updateState = ref.watch(updateProfileController);
       final updateController = ref.watch(updateProfileController.notifier);
+
+      // Only initialize once
+      if (!_isInitialized) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          updateController.initializeControllers(state.fetchProfile!);
+          updateController.syncWithProfile(state.fetchProfile!);
+        });
+        _isInitialized = true;
+      }
+
       return Scaffold(
         body: SafeArea(
           child: Container(
@@ -76,13 +92,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const AccountSubtitle(
-                              hasAddress: false,
-                            ),
+                            const AccountSubtitle(hasAddress: false),
                             if (widget.profileData.phoneNumber?.isNotEmpty ??
-                                false) ...[
+                                false)
                               PhoneNumber(),
-                            ],
                             const ProfileEditTitle(),
                             const ProfileAvatar(),
                             Form(
@@ -90,30 +103,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: Column(
                                 children: [
                                   GlobalPrimaryTextFormField(
-                                      controller: updateState.firstNameCon,
-                                      title: "First Name",
-                                      hint: "Enter First Name",
-                                      textInputType: TextInputType.name),
-                                  const VerticalSpace(
-                                    height: 12,
+                                    controller: updateState.firstNameCon,
+                                    title: "First Name",
+                                    hint: "Enter First Name",
+                                    textInputType: TextInputType.name,
                                   ),
+                                  const VerticalSpace(height: 12),
                                   GlobalPrimaryTextFormField(
-                                      controller: updateState.lastNameCon,
-                                      title: "Last Name",
-                                      hint: "Enter Last Name",
-                                      textInputType: TextInputType.name),
-                                  const VerticalSpace(
-                                    height: 12,
+                                    controller: updateState.lastNameCon,
+                                    title: "Last Name",
+                                    hint: "Enter Last Name",
+                                    textInputType: TextInputType.name,
                                   ),
+                                  const VerticalSpace(height: 12),
                                   GlobalPrimaryTextFormField(
                                     controller: updateState.phoneCon,
                                     title: phoneNo,
                                     hint: "12345678",
                                     textInputType: TextInputType.phone,
                                   ),
-                                  const VerticalSpace(
-                                    height: 12,
-                                  ),
+                                  const VerticalSpace(height: 12),
                                   GlobalPrimaryTextFormField(
                                     controller: updateState.emailCon,
                                     title: email,
@@ -124,21 +133,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ],
                               ),
                             ),
-                            const VerticalSpace(
-                              height: 36,
-                            ),
+                            const VerticalSpace(height: 36),
                             GlobalButton(
-                                isLoading: updateState.isUpdateBtnLoading,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 12),
-                                onPressed: () async {
-                                  await updateController
-                                      .reqUpdateProfile(context);
-                                },
-                                buttonText: "Update Account"),
-                            const VerticalSpace(
-                              height: 36,
+                              isLoading: updateState.isUpdateBtnLoading,
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              onPressed: () async {
+                                await updateController
+                                    .reqUpdateProfile(context);
+                              },
+                              buttonText: "Update Account",
                             ),
+                            const VerticalSpace(height: 36),
                             GlobalButton(
                               isLoading: updateState.isDeleteBtnLoading,
                               padding: const EdgeInsets.symmetric(vertical: 12),
@@ -146,7 +151,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 showDeleteAccountDialog(context, ref);
                               },
                               buttonText: "Delete Account",
-                            )
+                            ),
                           ],
                         ),
                       ),
