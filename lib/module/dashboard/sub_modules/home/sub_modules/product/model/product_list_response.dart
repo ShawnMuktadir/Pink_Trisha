@@ -39,6 +39,7 @@ class Product {
   String? paymentType;
   int? quantity;
   bool? isFeatured;
+
   Product({
     required this.id,
     required this.name,

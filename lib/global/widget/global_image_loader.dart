@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:pink_by_trisha_app/utils/styles/k_assets.dart';
 
 import '../../utils/enum.dart';
 
 class GlobalImageLoader extends StatelessWidget {
   const GlobalImageLoader({
-    Key? key,
+    super.key,
     required this.imagePath,
     this.imageFor = ImageFor.asset,
     this.height,
     this.width,
     this.fit,
-  }) : super(key: key);
+  });
+
   final String imagePath;
   final double? height;
   final double? width;
@@ -31,17 +31,14 @@ class GlobalImageLoader extends StatelessWidget {
           return SizedBox(
             height: height,
             width: width,
-            child: Icon(
-              size: height,
-              Icons.image,
-              color: Colors.grey.withOpacity(.2),
-            ),
           );
         },
-        errorBuilder: (context, exception, stackTrace) => GlobalImageLoader(
+        errorBuilder: (context, exception, stackTrace) {
+          return SizedBox(
             height: height,
             width: width,
-            imagePath: KAssetName.icEmptyImage2png.imagePath),
+          );
+        },
       );
     } else {
       return Image.asset(

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,7 +22,6 @@ import 'package:pink_by_trisha_app/utils/styles/k_colors.dart';
 import '../../module/dashboard/sub_modules/home/sub_modules/product/model/product_list_response.dart';
 
 class GlobalProductCard extends StatefulWidget {
-
   const GlobalProductCard(
       {super.key,
       this.imageUrl,
@@ -67,6 +67,12 @@ class GlobalProductCard extends StatefulWidget {
 }
 
 class _GlobalProductCardState extends State<GlobalProductCard> {
+  @override
+  void initState() {
+    super.initState();
+
+  }
+
   @override
   Widget build(BuildContext context) {
     String? imageUrl;
@@ -128,10 +134,6 @@ class _GlobalProductCardState extends State<GlobalProductCard> {
                                   paymentType: widget.paymentType,
                                   isInStock: widget.isInStock,
                                 ),
-
-                                /*widget.paymentType == "DVP"
-                                    ? PreorderShow()
-                                    : InStockShow(isInStock: widget.isInStack),*/
                                 SizedBox(
                                   height: 2,
                                 ),

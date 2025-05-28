@@ -57,8 +57,6 @@ class NetworkConnection {
   }
 }
 
-//enum Method { get, post, put, delete }
-
 class APIParams {
   final String url;
   final MethodType method;

@@ -1,23 +1,24 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pink_by_trisha_app/global/widget/global_button.dart';
 import 'package:pink_by_trisha_app/global/widget/global_image_loader.dart';
-import 'package:pink_by_trisha_app/global/widget/global_space.dart';
 import 'package:pink_by_trisha_app/global/widget/global_text.dart';
 import 'package:pink_by_trisha_app/module/dashboard/sub_modules/home/components/home_review_price.dart';
 import 'package:pink_by_trisha_app/module/dashboard/sub_modules/home/controller/home_controller.dart';
 import 'package:pink_by_trisha_app/module/dashboard/sub_modules/home/model/home_country_response.dart';
 import 'package:pink_by_trisha_app/utils/enum.dart';
 import 'package:pink_by_trisha_app/utils/extension.dart';
-import 'package:pink_by_trisha_app/utils/styles/k_assets.dart';
 import 'package:pink_by_trisha_app/utils/styles/k_colors.dart';
+
+import '../../../../../utils/currency_country_util.dart';
 
 //final List<String> countries = [];
 // final countries = ["BAN", "USA", "UAE"];
 
 class HomeCalculatePrice extends ConsumerWidget {
-  const HomeCalculatePrice({Key? key}) : super(key: key);
+  const HomeCalculatePrice({super.key});
 
   @override
   Widget build(BuildContext context, ref) {
@@ -195,6 +196,7 @@ class _DimensionFieldState extends State<DimensionField> {
   late FocusNode focusNode2;
   late FocusNode focusNode3;
   bool hasFocus = false;
+
   @override
   void initState() {
     focusNode1 = FocusNode();
@@ -312,6 +314,7 @@ class WeightField extends StatefulWidget {
 
 class _WeightFieldState extends State<WeightField> {
   late FocusNode focusNode;
+
   @override
   void initState() {
     focusNode = FocusNode();
@@ -415,6 +418,7 @@ class SellerShippingFeeField extends StatefulWidget {
 
 class _SellerShippingFeeFieldState extends State<SellerShippingFeeField> {
   late FocusNode focusNode;
+
   @override
   void initState() {
     focusNode = FocusNode();
@@ -503,6 +507,7 @@ class ProductPriceField extends StatefulWidget {
 
 class _ProductPriceFieldState extends State<ProductPriceField> {
   late FocusNode focusNode;
+
   @override
   void initState() {
     focusNode = FocusNode();
@@ -616,34 +621,40 @@ class CountrySelection extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Row(
               children: [
-                GlobalImageLoader(
-                    height: 13,
-                    width: 20,
-                    fit: BoxFit.cover,
-                    imageFor: ImageFor.asset,
-                    imagePath: KAssetName.icEmptyImage2png.imagePath),
-                const HorizontalSpace(
-                  width: 6,
-                ),
                 Expanded(
                   child: DropdownButton<CountryData>(
                     value: state.selectedCountry,
-                    underline: Container(), // Remove the default underline
+                    underline: Container(),
+                    // Remove the default underline
                     icon: const Icon(Icons.arrow_drop_down,
                         color: Color(0xFF2C2328)),
                     style: const TextStyle(
                       color: Color(0xFFFBFBFF),
                     ),
-                    isExpanded: true, // Default value
+                    isExpanded: true,
+                    // Default value
                     items: state.countries.map((country) {
                       return DropdownMenuItem<CountryData>(
                         value: country,
-                        child: GlobalText(
-                          str: country.name ?? "",
-                          color: KColor.deep2.color,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          height: 0,
+                        child: Row(
+                          children: [
+                            GlobalImageLoader(
+                              imagePath: getFlagUrl(country.currencyISOCode),
+                              // must map properly
+                              height: 16,
+                              width: 24,
+                              fit: BoxFit.cover,
+                              imageFor: ImageFor.network,
+                            ),
+                            const SizedBox(width: 8),
+                            GlobalText(
+                              str: country.name ?? "",
+                              color: KColor.deep2.color,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              height: 0,
+                            ),
+                          ],
                         ),
                       );
                     }).toList(),
@@ -654,7 +665,9 @@ class CountrySelection extends StatelessWidget {
                               controller.getHomeProductTypesResponse(
                                   onDemandCountryId: newValue!.id!);
                             }
-                            print(newValue?.name ?? "");
+                            if (kDebugMode) {
+                              print(newValue?.name ?? "");
+                            }
                           }
                         : null,
                   ),
@@ -665,6 +678,12 @@ class CountrySelection extends StatelessWidget {
         );
       },
     );
+  }
+
+  String getFlagUrl(String? currencyCode) {
+    final countryCode =
+        currencyToCountryCode[currencyCode?.toUpperCase()] ?? 'us';
+    return "https://flagcdn.com/w40/$countryCode.png";
   }
 }
 
@@ -762,11 +781,13 @@ class ShortTextField extends StatelessWidget {
     required this.focusNode,
     required this.hasFocus,
   });
+
   final TextEditingController textEditingController;
   final String hint;
   final bool enabled;
   final bool hasFocus;
   final FocusNode focusNode;
+
   @override
   Widget build(BuildContext context) {
     return Expanded(

@@ -25,7 +25,6 @@ class HomeExploreProducts extends ConsumerWidget {
     // .where((element) =>
     //     element.product?.isFeatured != null && element.product!.isFeatured!)
     // .toList();
-    ;
 
     return Container(
       width: context.width,
@@ -115,6 +114,9 @@ class HomeExploreProducts extends ConsumerWidget {
                       print("\nimageUrl of ${product?.name} is : \n");
                       print(imageUrl);
                       print("\n..........");
+                      print(
+                          "\nbadge_paymentType of ${product!.paymentType} is : \n");
+                      print("\nbadge_isInStock of ${product.quantity} is : \n");
                       return Container(
                         width: context.width / 2,
                         padding: EdgeInsets.symmetric(
@@ -123,7 +125,7 @@ class HomeExploreProducts extends ConsumerWidget {
                         ),
                         child: GlobalProductCard(
                           imageUrl: imageUrl,
-                          id: product!.id!,
+                          id: product.id,
                           title: product.name ?? "",
                           subTitle: product.shortDescription ?? "",
                           price: product.price,

@@ -1,3 +1,5 @@
+import '../../../../../utils/currency_country_util.dart';
+
 class HomeCountryResponse {
   int? statusCode;
   String? message;
@@ -48,6 +50,12 @@ class CountryData {
           json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
     );
   }
+
+  String getFlagUrl(String? currencyISOCode) {
+    final code = currencyToCountryCode[currencyISOCode?.toUpperCase()] ?? 'us';
+    return "https://flagcdn.com/w40/$code.png";
+  }
+
 }
 
 class CountryProductTypeResponse {
