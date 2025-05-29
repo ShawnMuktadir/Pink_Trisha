@@ -113,6 +113,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                     stackQty: state.variantArgument?.quantity ??
                                         state.productDetailsData?.quantity ??
                                         0,
+                                    points:
+                                        state.productDetailsData?.points ?? 0,
                                   ),
 
                                   // const ProductDetailsExtras(),

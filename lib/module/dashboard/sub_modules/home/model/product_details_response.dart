@@ -113,13 +113,21 @@ class ProductSpecification {}
 class ProductAttribute {
   final int id;
   final String name;
-  final String? nameBn; // Assuming it's nullable
+  final String? nameBn;
 
   ProductAttribute({
     required this.id,
     required this.name,
     this.nameBn,
   });
+
+  factory ProductAttribute.fromJson(Map<String, dynamic> json) {
+    return ProductAttribute(
+      id: json['id'] ?? 0,
+      name: json['name'] ?? '',
+      nameBn: json['nameBn'],
+    );
+  }
 }
 
 class ProductVariant {

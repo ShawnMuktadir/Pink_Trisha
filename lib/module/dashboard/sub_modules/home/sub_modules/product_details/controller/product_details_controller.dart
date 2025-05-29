@@ -223,9 +223,9 @@ class ProductDetailsController extends StateNotifier<ProductDetailsState> {
       url: url,
       method: MethodType.GET,
       onSuccessFunction: (response) {
-        final ProductDetailsResponse productDetailsBannerResponse =
+        final ProductDetailsResponse productDetailsResponse =
             ProductDetailsResponse.fromJson(response.data);
-        final data = productDetailsBannerResponse.data;
+        final data = productDetailsResponse.data;
         "response $response".log();
         state = state.copyWith(isLoading: false, productDetailsData: data);
         if (data?.category?.id != null) {

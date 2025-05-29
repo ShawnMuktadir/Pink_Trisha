@@ -22,15 +22,14 @@ class ProductDetailsData {
   final int? id;
   final int? quantity;
   final String? name;
-  final String? paymentType;
   final String? nameBn;
   final String? shortDescription;
+  final String? longDescription;
   final String? imageUrl;
   final dynamic price;
   final dynamic offerPrice;
   final String? productReturnPolicy;
   final String? productWarranty;
-  final String? longDescription;
   final int? estimatedDeliveryDayNumber;
   final Category? category;
   final List<ProductDetailsImage>? productImages;
@@ -38,57 +37,67 @@ class ProductDetailsData {
   final List<ProductDetailsVariant>? productVariants;
   final ProductAttribute? attributes;
 
+  final String? sku;
+  final String? paymentType;
+  final int? categoryId;
+  final int? points;
+
   ProductDetailsData({
     this.id,
+    this.quantity,
     this.name,
     this.nameBn,
-    this.quantity,
     this.shortDescription,
+    this.longDescription,
     this.imageUrl,
     this.price,
-    this.paymentType,
     this.offerPrice,
     this.productReturnPolicy,
     this.productWarranty,
-    this.longDescription,
     this.estimatedDeliveryDayNumber,
     this.category,
     this.productImages,
     this.productSpecifications,
     this.productVariants,
     this.attributes,
+    this.sku,
+    this.paymentType,
+    this.categoryId,
+    this.points,
   });
 
   factory ProductDetailsData.fromJson(Map<String, dynamic> json) {
     return ProductDetailsData(
       id: json['id'],
+      quantity: json['quantity'],
       name: json['name'],
       nameBn: json['nameBn'],
       shortDescription: json['shortDescription'],
+      longDescription: json['longDescription'],
       imageUrl: json['imageUrl'],
-      paymentType: json['paymentType'],
-      price: json['price']?.toDouble(),
-      offerPrice: json['offerPrice']?.toDouble(),
-      quantity: json['quantity'],
+      price: json['price'],
+      offerPrice: json['offerPrice'],
       productReturnPolicy: json['productReturnPolicy'],
       productWarranty: json['productWarranty'],
-      longDescription: json['longDescription'],
       estimatedDeliveryDayNumber: json['estimatedDeliveryDayNumber'],
       category:
           json['category'] != null ? Category.fromJson(json['category']) : null,
-      productImages: (json['productImages'] as List?)
-          ?.map((i) => ProductDetailsImage.fromJson(i))
+      productImages: (json['productImages'] as List<dynamic>?)
+          ?.map((e) => ProductDetailsImage.fromJson(e))
           .toList(),
-      productSpecifications: (json['productSpecifications'] as List?)
-          ?.map((i) => ProductDetailsSpecification.fromJson(i))
+      productSpecifications: (json['productSpecifications'] as List<dynamic>?)
+          ?.map((e) => ProductDetailsSpecification.fromJson(e))
           .toList(),
-      productVariants: (json['productVariants'] as List?)
-          ?.map((i) => ProductDetailsVariant.fromJson(i))
+      productVariants: (json['productVariants'] as List<dynamic>?)
+          ?.map((e) => ProductDetailsVariant.fromJson(e))
           .toList(),
-      attributes: null,
-      // attributes: json['attributes'] != null
-      //     ? ProductAttribute.fromJson(json['attributes'])
-      //     : null,
+      attributes: json['attributes'] != null
+          ? ProductAttribute.fromJson(json['attributes'])
+          : null,
+      sku: json['sku'],
+      paymentType: json['paymentType'],
+      categoryId: json['categoryId'],
+      points: json['points'],
     );
   }
 }
@@ -214,6 +223,7 @@ class ProductDetailsVariant {
           : null,
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -245,6 +255,7 @@ class Attribute {
       nameBn: json['nameBn'],
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -269,6 +280,7 @@ class ProductImageModel {
       productId: json['productId'],
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'src': src,

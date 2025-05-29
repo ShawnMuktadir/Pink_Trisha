@@ -19,8 +19,7 @@ class ProductDetailsCommon extends StatelessWidget {
     required this.productVariants,
     required this.id,
     required this.stackQty,
-    // required this.shades,
-    // required this.colors
+    required this.points,
   });
 
   final int id;
@@ -28,6 +27,7 @@ class ProductDetailsCommon extends StatelessWidget {
   final String title;
   final dynamic offerPrice;
   final dynamic price;
+  final dynamic points;
   final List<ProductDetailsVariant> productVariants;
 
   // final List<ProductVariant> colors;
@@ -70,7 +70,7 @@ class ProductDetailsCommon extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   GlobalText(
-                    str: 'BDT${price != 0 ? price : offerPrice}',
+                    str: 'BDT ${price != 0 ? price : offerPrice}',
                     color: KColor.deepPrimary.color,
                     fontSize: 24,
                     fontWeight: FontWeight.w600,
@@ -81,7 +81,7 @@ class ProductDetailsCommon extends StatelessWidget {
                   ),
                   if (price != 0)
                     GlobalText(
-                      str: 'BDT${offerPrice} ',
+                      str: 'BDT $offerPrice ',
                       color: KColor.grey2.color,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
@@ -92,6 +92,23 @@ class ProductDetailsCommon extends StatelessWidget {
               ),
               const SizedBox(
                 height: 0,
+              ),
+              VerticalSpace(
+                height: 16.h,
+              ),
+              GlobalText(
+                str: points != null
+                    ? 'Points: $points ${points == 1 ? "point" : "points"}'
+                    : 'No points',
+                color: (points == null || points == 0)
+                    ? KColor.red.color
+                    : KColor.deepGrey.color,
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+                height: 0.07,
+              ),
+              VerticalSpace(
+                height: 17.h,
               ),
               ProductVariantSection(
                 id: id,
