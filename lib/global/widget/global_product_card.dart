@@ -443,20 +443,21 @@ class DiscountShow extends StatelessWidget {
           bottom: 4,
           right: 0,
           left: 19,
-          child: Container(
+          child: SizedBox(
             width: 60,
+            height: 60,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 GlobalText(
-                  str: 'Save ${saveTk} TK',
+                  str: 'Save $saveTk TK',
                   textAlign: TextAlign.center,
                   color: Colors.white,
                   fontSize: 7,
                   fontFamily: 'DM Sans',
                   fontWeight: FontWeight.w500,
                   overflow: TextOverflow.ellipsis,
-                  //   height: 0.23,
+                  height: 0.23,
                 ),
               ],
             ),

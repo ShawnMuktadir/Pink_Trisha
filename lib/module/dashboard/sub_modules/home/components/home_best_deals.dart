@@ -93,14 +93,24 @@ class HomeBestDeals extends ConsumerWidget {
                           children: [
                             SizedBox(
                               width: context.width / 2,
-                              child: Column(
-                                children: [
-                                  buildProductCard(0),
-                                  SizedBox(height: 15.w),
-                                  if ((startIndex + 2) <
-                                      bestDealProducts.length)
-                                    buildProductCard(2),
-                                ],
+                              child: LayoutBuilder(
+                                builder: (context, constraints) {
+                                  return SingleChildScrollView(
+                                    child: ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                          minHeight: constraints.maxHeight),
+                                      child: Column(
+                                        children: [
+                                          buildProductCard(0),
+                                          SizedBox(height: 15.w),
+                                          if ((startIndex + 2) <
+                                              bestDealProducts.length)
+                                            buildProductCard(2),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                             Container(

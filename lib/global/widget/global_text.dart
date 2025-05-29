@@ -19,7 +19,7 @@ class GlobalText extends StatelessWidget {
   final String? fontFamily;
 
   const GlobalText({
-    Key? key,
+    super.key,
     required this.str,
     this.fontWeight,
     this.fontSize,
@@ -33,7 +33,7 @@ class GlobalText extends StatelessWidget {
     this.softwrap,
     this.height,
     this.fontFamily,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
