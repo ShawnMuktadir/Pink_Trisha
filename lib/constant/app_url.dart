@@ -11,6 +11,7 @@ enum AppUrl {
   updateProfilePicture,
   profileUrl,
   home,
+  featureProduct,
   homeCountry,
   homeCountryProductType,
   homePriceCalculation,
@@ -87,6 +88,8 @@ extension AppUrlExtention on AppUrl {
         return 'customer/api/v1/update/profile';
       case AppUrl.home:
         return 'public/api/v1/fetch-home?categoryId={categoryId}&skip={skip}&take={take}';
+      case AppUrl.featureProduct:
+        return '${_baseUrl}public/api/v1/featured-products';
       case AppUrl.homeCountry:
         return 'public/api/v1/on-demand-countries';
       case AppUrl.homeCountryProductType:

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,7 +21,7 @@ import 'package:pink_by_trisha_app/utils/styles/k_colors.dart';
 import '../../module/dashboard/sub_modules/home/sub_modules/product/model/product_list_response.dart';
 
 class GlobalProductCard extends StatefulWidget {
-  const GlobalProductCard(
+  GlobalProductCard(
       {super.key,
       this.imageUrl,
       this.productImages,
@@ -34,7 +33,8 @@ class GlobalProductCard extends StatefulWidget {
       required this.id,
       required this.loaderScreenType,
       required this.isPreorder,
-      required this.points,
+      this.points,
+      this.productImage,
       required this.quantity,
       required this.brandId,
       required this.categoryId,
@@ -50,13 +50,14 @@ class GlobalProductCard extends StatefulWidget {
   final int? vendorId;
   final String? imageUrl;
   final String paymentType;
-  final List<ProductImage>? productImages;
+  String? productImage;
+  List<ProductImage>? productImages;
   final String slug;
   final String title;
   final String subTitle;
   final double offerPrice;
   final double price;
-  final int points;
+  int? points;
   final bool isPreorder;
   final bool isInStock;
   final LoaderScreenType loaderScreenType;
@@ -68,17 +69,13 @@ class GlobalProductCard extends StatefulWidget {
 
 class _GlobalProductCardState extends State<GlobalProductCard> {
   @override
-  void initState() {
-    super.initState();
-
-  }
-
-  @override
   Widget build(BuildContext context) {
     String? imageUrl;
     if (widget.productImages != null && widget.productImages!.isNotEmpty) {
       imageUrl = widget.productImages![0]
           .src; // Accessing the imageUrl property from ProductImage
+    } else if (widget.productImage != null) {
+      imageUrl = widget.productImage!;
     }
 
     return Consumer(
@@ -132,7 +129,7 @@ class _GlobalProductCardState extends State<GlobalProductCard> {
                               children: [
                                 StockStatusWidget(
                                   paymentType: widget.paymentType,
-                                  isInStock: widget.isInStock,
+                                  quantity: widget.quantity ?? 0,
                                 ),
                                 SizedBox(
                                   height: 2,
@@ -272,14 +269,16 @@ class _GlobalProductCardState extends State<GlobalProductCard> {
                             borderRadius: BorderRadius.circular(100),
                           ),
                         ),
-                        child: GlobalText(
-                          str: 'Club Point ${widget.points}',
-                          color: const Color(0xFF2C2328),
-                          fontSize: 10,
-                          fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w400,
-                          height: 0.16,
-                        ),
+                        child: widget.points != null
+                            ? GlobalText(
+                                str: 'Club Point ${widget.points}',
+                                color: const Color(0xFF2C2328),
+                                fontSize: 10,
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w400,
+                                height: 0.16,
+                              )
+                            : SizedBox(),
                       ),
                       Container(
                         width: 24,
@@ -470,22 +469,47 @@ class DiscountShow extends StatelessWidget {
 
 class StockStatusWidget extends StatelessWidget {
   final String paymentType;
-  final bool isInStock;
+  final int quantity;
 
   const StockStatusWidget({
     super.key,
     required this.paymentType,
-    required this.isInStock,
+    required this.quantity,
   });
 
   @override
   Widget build(BuildContext context) {
     if (paymentType == "DVP") {
-      return const PreorderShow(); // Show "Preorder"
-    } else if (paymentType == "COD" && !isInStock) {
-      return const InStockShow(isInStock: false); // Show "Out of stock"
+      return const PreorderShow(); // Pre Order
+    } else if (quantity > 0 && paymentType != "DVP") {
+      return const InStockShow(isInStock: true); // In Stock
+    } else if (quantity == 0 && paymentType != "DVP") {
+      return const InStockShow(isInStock: false); // Out of Stock
     } else {
-      return const InStockShow(isInStock: true); // Show "In stock"
+      return const SizedBox(); // Default fallback (optional)
     }
+  }
+}
+
+class SaveAmountWidget extends StatelessWidget {
+  final double price;
+  final double offerPrice;
+
+  const SaveAmountWidget({
+    super.key,
+    required this.price,
+    required this.offerPrice,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (price > 0 && offerPrice > price) {
+      final savings = offerPrice - price;
+      return Text(
+        'Save ৳${savings.toStringAsFixed(0)}',
+        style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+      );
+    }
+    return const SizedBox.shrink(); // empty widget
   }
 }

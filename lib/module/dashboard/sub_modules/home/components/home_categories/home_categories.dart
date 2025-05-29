@@ -16,6 +16,8 @@ import 'package:pink_by_trisha_app/utils/navigation.dart';
 import 'package:pink_by_trisha_app/utils/styles/k_assets.dart';
 import 'package:pink_by_trisha_app/utils/styles/k_colors.dart';
 
+import '../../../../../../utils/app_util.dart';
+
 class HomeCategories extends ConsumerWidget {
   const HomeCategories({Key? key}) : super(key: key);
 
@@ -41,7 +43,7 @@ class HomeCategories extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GlobalText(
-                  str: "Shop by Catagory",
+                  str: "Shop by Category",
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                   height: 0.09,
@@ -71,7 +73,7 @@ class HomeCategories extends ConsumerWidget {
                         child: Padding(
                         padding: const EdgeInsets.all(20.0),
                         child: GlobalText(
-                          str: "No Catagory found",
+                          str: "No Category found",
                           color: KColor.deepGrey.color,
                         ),
                       ))
@@ -114,8 +116,8 @@ class HomeCategories extends ConsumerWidget {
                                         top: 13,
                                         left: 11,
                                         child: GlobalText(
-                                          str: categoryState
-                                                  .cateAllData[index].name ??
+                                          str: capitalizeFirstLetter(categoryState
+                                              .cateAllData[index].name) ??
                                               '',
                                           color: const Color(0xFF2C2328),
                                           fontSize: 12,

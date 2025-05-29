@@ -25,14 +25,15 @@ class Data {
   List<FeaturedCategory>? featuredCategories;
   List<ProductModel>? bestDealProducts;
   List<FeaturedBrand>? featuredBrands;
-  List<ProductModel>? featuredProducts;
+
+  // List<FeaturedProduct>? featuredProducts;
 
   Data({
     this.heroBanners,
     this.featuredCategories,
     this.bestDealProducts,
     this.featuredBrands,
-    this.featuredProducts,
+    // this.featuredProducts,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) {
@@ -49,9 +50,9 @@ class Data {
       featuredBrands: (json['featuredBrands'] as List<dynamic>?)
           ?.map((brand) => FeaturedBrand.fromJson(brand))
           .toList(),
-      featuredProducts: (json['featuredProducts'] as List<dynamic>?)
-          ?.map((product) => ProductModel.fromJson(product))
-          .toList(),
+      /*featuredProducts: (json['featuredProducts'] as List<dynamic>?)
+          ?.map((product) => FeaturedProduct.fromJson(product))
+          .toList(),*/
     );
   }
 }
@@ -109,6 +110,7 @@ class FeaturedCategory {
   String? imageUrl;
   String? imageUrlMobile;
   bool? isFeatured;
+
   FeaturedCategory({
     this.id,
     this.name,
@@ -171,5 +173,77 @@ class FeaturedBrand {
       imageUrl: json['imageUrl'],
       isFeatured: json['isFeatured'],
     );
+  }
+}
+
+class FeaturedProduct {
+  final String? sId;
+  final int? id;
+  final int? vendorId;
+  final int? brandId;
+  final int? categoryId;
+  final String? name;
+  final String? nameBn;
+  final String? shortDescription;
+  final String? slug;
+  final double? offerPrice;
+  final double? price;
+  final int? quantity;
+  final String? paymentType;
+  final String? imageUrl;
+
+  FeaturedProduct({
+    this.sId,
+    this.id,
+    this.vendorId,
+    this.brandId,
+    this.categoryId,
+    this.name,
+    this.nameBn,
+    this.shortDescription,
+    this.slug,
+    this.offerPrice,
+    this.price,
+    this.quantity,
+    this.paymentType,
+    this.imageUrl,
+  });
+
+  factory FeaturedProduct.fromJson(Map<String, dynamic> json) {
+    return FeaturedProduct(
+      sId: json['_id'] as String?,
+      id: json['id'] as int?,
+      vendorId: json['vendorId'] as int?,
+      brandId: json['brandId'] as int?,
+      categoryId: json['categoryId'] as int?,
+      name: json['name'] as String?,
+      nameBn: json['nameBn'] as String?,
+      shortDescription: json['shortDescription'] as String?,
+      slug: json['slug'] as String?,
+      offerPrice: (json['offerPrice'] as num?)?.toDouble(),
+      price: (json['price'] as num?)?.toDouble(),
+      quantity: json['quantity'] as int?,
+      paymentType: json['paymentType'] as String?,
+      imageUrl: json['imageUrl'] as String?,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': sId,
+      'id': id,
+      'vendorId': vendorId,
+      'brandId': brandId,
+      'categoryId': categoryId,
+      'name': name,
+      'nameBn': nameBn,
+      'shortDescription': shortDescription,
+      'slug': slug,
+      'offerPrice': offerPrice,
+      'price': price,
+      'quantity': quantity,
+      'paymentType': paymentType,
+      'imageUrl': imageUrl,
+    };
   }
 }

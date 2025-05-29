@@ -12,7 +12,7 @@ class HomeState {
   final FeaturedCategory? selectedCategory;
   final List<ProductModel> bestDealProducts;
   final List<FeaturedBrand> featuredBrands;
-  final List<ProductModel> featuredProducts;
+  final List<FeaturedProduct> featuredProducts;
   final List<CountryData> countries;
   final List<CountryProductType> countryProductTypes;
   final PriceCalculationData? priceCalculationData;
@@ -81,7 +81,7 @@ class HomeState {
     List<FeaturedCategory>? categoryTitles,
     List<ProductModel>? bestDealProducts,
     List<FeaturedBrand>? featuredBrands,
-    List<ProductModel>? featuredProducts,
+    List<FeaturedProduct>? featuredProducts,
     List<CountryData>? countries,
     List<CountryProductType>? countryProductTypes,
     PriceCalculationData? priceCalculationData,

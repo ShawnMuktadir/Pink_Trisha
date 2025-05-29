@@ -64,7 +64,7 @@ class HomeBestDeals extends ConsumerWidget {
 
                         return GlobalProductCard(
                           imageUrl: product?.imageUrl,
-                          id: product!.id!,
+                          id: product!.id,
                           title: product.name ?? "",
                           subTitle: product.shortDescription ?? "",
                           price: product.price,

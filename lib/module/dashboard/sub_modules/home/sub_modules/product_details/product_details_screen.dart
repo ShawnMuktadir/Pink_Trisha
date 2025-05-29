@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pink_by_trisha_app/global/widget/global_background.dart';
@@ -22,6 +23,7 @@ class ProductDetailsScreenModel {
 
 class ProductDetailsScreen extends StatefulWidget {
   const ProductDetailsScreen(this.productDetailsScreenModel, {super.key});
+
   final ProductDetailsScreenModel productDetailsScreenModel;
 
   @override
@@ -31,6 +33,7 @@ class ProductDetailsScreen extends StatefulWidget {
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   late int pid;
   late String slug;
+
   @override
   void initState() {
     pid = widget.productDetailsScreenModel.id;
@@ -46,7 +49,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (_, WidgetRef ref, __) {
-        print("_ProductDetailsScreenState called");
+        if (kDebugMode) {
+          print("_ProductDetailsScreenState called");
+        }
 
         final controller = ref.read(productDetailsController(pid).notifier);
         final state = ref.watch(productDetailsController(pid));
@@ -186,7 +191,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
 
 class RoundedWhiteBackground extends StatelessWidget {
   const RoundedWhiteBackground({super.key, required this.child});
+
   final Widget child;
+
   @override
   Widget build(BuildContext context) {
     return Padding(

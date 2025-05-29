@@ -5,8 +5,7 @@ import 'package:pink_by_trisha_app/utils/styles/k_colors.dart';
 class GlobalSeeAllTextButton extends StatelessWidget {
   final VoidCallback onTap;
 
-  const GlobalSeeAllTextButton({Key? key, required this.onTap})
-      : super(key: key);
+  const GlobalSeeAllTextButton({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

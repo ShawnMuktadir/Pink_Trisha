@@ -13,7 +13,6 @@ import 'package:pink_by_trisha_app/module/dashboard/sub_modules/home/model/revie
 import 'package:pink_by_trisha_app/module/dashboard/sub_modules/home/model/review_price_response.dart';
 import 'package:pink_by_trisha_app/utils/enum.dart';
 import 'package:pink_by_trisha_app/utils/extension.dart';
-import 'package:pink_by_trisha_app/utils/network_connection.dart';
 import 'package:pink_by_trisha_app/utils/view_util.dart';
 
 final homeController =
@@ -56,6 +55,8 @@ class HomeController extends StateNotifier<HomeState> {
             reviewPriceResponse: null));
 
   final ApiClient _apiClient = ApiClient();
+  List<FeaturedProduct> _allFeaturedProducts = [];
+
   void addListenersToControllers() {
     final controllers = [
       state.productLinkCon,
@@ -316,7 +317,10 @@ class HomeController extends StateNotifier<HomeState> {
   }
 
   void onCategoryChange({required FeaturedCategory? data}) {
-    state = state.copyWith(selectedCategory: data);
+    state = state.copyWith(
+      selectedCategory: data,
+      featuredProducts: [],
+    );
   }
 
   void onWeightUnitDropdownChange({required data}) {
@@ -361,83 +365,87 @@ class HomeController extends StateNotifier<HomeState> {
   }) async {
     if (isReload) state = state.copyWith(isLoading: true);
 
-    final url = AppUrl.home.url
+    final homeUrl = AppUrl.home.url
         .replaceFirst('{categoryId}', categoryId?.toString() ?? "")
         .replaceFirst('{skip}', skip.toString())
         .replaceFirst('{take}', take.toString());
+
     await _apiClient
         .request(
-      url: url,
+      url: homeUrl,
       method: MethodType.GET,
       onSuccessFunction: (response) {
-        print("home success 1");
         final HomeResponse homeBannerResponse =
             HomeResponse.fromJson(response.data);
-        print("home success 2");
         final data = homeBannerResponse.data;
-        print("home success 3");
-        "response $response".log();
-        final categoryTitles = [
-          FeaturedCategory(name: "All Arrival"),
-        ];
-        print("home success 4");
+
+        final categoryTitles = [FeaturedCategory(name: "All Arrival")];
         categoryTitles.addAll(data?.featuredCategories ?? []);
+
+        final selectedCategory = categoryTitles.firstWhere(
+          (cat) => cat.id == state.selectedCategory?.id,
+          orElse: () => categoryTitles.first,
+        );
+
         state = state.copyWith(
           heroBanners: data?.heroBanners ?? [],
           featuredCategories: data?.featuredCategories ?? [],
           categoryTitles: categoryTitles,
-          selectedCategory: categoryTitles.firstWhere(
-              (element) => element.id == state.selectedCategory?.id),
+          selectedCategory: selectedCategory,
           bestDealProducts: data?.bestDealProducts ?? [],
           featuredBrands: data?.featuredBrands ?? [],
-          featuredProducts: data?.featuredProducts ?? [],
         );
       },
     )
         .catchError((e) {
-      "error in home $e".log();
-      print("home err 4");
+      print("Error in Home API: $e");
     });
+
+    final fpUrl = AppUrl.featureProduct.url
+        .replaceFirst('{categoryId}', categoryId?.toString() ?? "")
+        .replaceFirst('{skip}', skip.toString())
+        .replaceFirst('{take}', take.toString());
+
+    await _apiClient
+        .request(
+      url: fpUrl,
+      method: MethodType.GET,
+      onSuccessFunction: (response) {
+        final featuredProducts = (response.data['data'] as List)
+            .map((e) => FeaturedProduct.fromJson(e))
+            .toList();
+
+        // Save full list for future filters
+        _allFeaturedProducts = featuredProducts;
+
+        // Filter by selected category
+        final filtered = _filterFeaturedByCategory(state.selectedCategory?.id);
+        state = state.copyWith(featuredProducts: filtered);
+      },
+    )
+        .catchError((e) {
+      print("Error in Featured Products API: $e");
+    });
+
     state = state.copyWith(isLoading: false);
   }
 
-  // Future<void> getCategoriesResponse() async {
-  //   //state = state.copyWith(isLoading: true);
+  List<FeaturedProduct> _filterFeaturedByCategory(int? categoryId) {
+    if (categoryId == null || categoryId == 0) {
+      return _allFeaturedProducts;
+    }
+    return _allFeaturedProducts
+        .where((product) => product.categoryId == categoryId)
+        .toList();
+  }
 
-  //   final url = AppUrl.home.url
-  //       .replaceFirst('{categoryId}', categoryId?.toString() ?? "")
-  //       .replaceFirst('{skip}', skip.toString())
-  //       .replaceFirst('{take}', take.toString());
-  //   await _apiClient
-  //       .request(
-  //     url: url,
-  //     method: Method.GET,
-  //     onSuccessFunction: (response) {
-  //       final HomeResponse homeBannerResponse =
-  //           HomeResponse.fromJson(response.data);
-  //       final data = homeBannerResponse.data;
-  //       "response $response".log();
-  //       final categoryTitles = [
-  //         FeaturedCategory(name: "All Arrival"),
-  //       ];
-  //       categoryTitles.addAll(data?.featuredCategories ?? []);
-  //       state = state.copyWith(
-  //         heroBanners: data?.heroBanners ?? [],
-  //         featuredCategories: data?.featuredCategories ?? [],
-  //         categoryTitles: categoryTitles,
-  //         selectedCategory: categoryTitles.firstWhere(
-  //             (element) => element.id == state.selectedCategory?.id),
-  //         bestDealProducts: data?.bestDealProducts ?? [],
-  //         featuredBrands: data?.featuredBrands ?? [],
-  //         featuredProducts: data?.featuredProducts ?? [],
-  //       );
-  //     },
-  //   )
-  //       .catchError((e) {
-  //     "error $e".log();
-  //   });
-  //  // state = state.copyWith(isLoading: false);
-  // }
+  void updateCategoryAndClearProducts(FeaturedCategory category) {
+    state = state.copyWith(
+      selectedCategory: category,
+      featuredProducts: [],
+      isLoading: true,
+    );
+  }
 
   Future<void> getProductDetailsResponse() async {
     state = state.copyWith(isLoading: true);
@@ -456,7 +464,6 @@ class HomeController extends StateNotifier<HomeState> {
           featuredCategories: data?.featuredCategories ?? [],
           bestDealProducts: data?.bestDealProducts ?? [],
           featuredBrands: data?.featuredBrands ?? [],
-          featuredProducts: data?.featuredProducts ?? [],
         );
       },
     )
@@ -491,7 +498,6 @@ class HomeController extends StateNotifier<HomeState> {
           featuredCategories: data?.featuredCategories ?? [],
           bestDealProducts: data?.bestDealProducts ?? [],
           featuredBrands: data?.featuredBrands ?? [],
-          featuredProducts: data?.featuredProducts ?? [],
         );
       },
     )
@@ -500,7 +506,4 @@ class HomeController extends StateNotifier<HomeState> {
     });
     state = state.copyWith(isLoading: false);
   }
-  // Future<void> initializeAllApis() async {
-  //   await getHomeResponse();
-  // }
 }

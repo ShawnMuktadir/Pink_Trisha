@@ -80,7 +80,7 @@ class ProductDetailsState {
   final ProductDetailsData? productDetailsData;
   final List<Product> relatedProducts;
   final VariantArgument? variantArgument;
-  final List<ProductDetailsVariant> selectedproductVariants;
+  final List<ProductDetailsVariant> selectedProductVariants;
   final int currentSlipPageIndex;
   final bool isLoading;
   final bool isRelatedProductsLoading;
@@ -99,7 +99,7 @@ class ProductDetailsState {
     required this.currentCheckoutMethodIndex,
     required this.currentAttributeValueId,
     required this.productDetailsData,
-    required this.selectedproductVariants,
+    required this.selectedProductVariants,
     required this.scrollController,
     required this.slipScrollController,
     required this.variantArgument,
@@ -140,8 +140,8 @@ class ProductDetailsState {
       currentCheckoutMethodIndex:
           currentCheckoutMethodIndex ?? this.currentCheckoutMethodIndex,
       productDetailsData: productDetailsData ?? this.productDetailsData,
-      selectedproductVariants:
-          selectedproductVariants ?? this.selectedproductVariants,
+      selectedProductVariants:
+          selectedproductVariants ?? this.selectedProductVariants,
       slipScrollController: slipScrollController ?? this.slipScrollController,
       scrollController: scrollController ?? this.scrollController,
       titleScrollController:

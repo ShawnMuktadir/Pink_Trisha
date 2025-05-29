@@ -46,7 +46,7 @@ class ProductDetailsController extends StateNotifier<ProductDetailsState> {
           slipScrollController: ScrollController(),
           titleScrollController: ScrollController(),
           currentProductQuantity: 1,
-          selectedproductVariants: const [],
+          selectedProductVariants: const [],
           currentAttributeValueId: const [],
           variantArgument: null,
         )) {
