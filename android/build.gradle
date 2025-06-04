@@ -13,6 +13,18 @@ buildscript {
     }
 }
 
+/*subprojects {
+    afterEvaluate {
+        if (plugins.hasPlugin("kotlin-android") || plugins.hasPlugin("org.jetbrains.kotlin.jvm")) {
+            tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+                kotlinOptions {
+                    jvmTarget = "17"
+                }
+            }
+        }
+    }
+}*/
+
 // Remove the subprojects block that references ':app'
 allprojects {
     repositories {
