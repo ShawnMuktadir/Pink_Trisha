@@ -39,7 +39,7 @@ initServices() async {
   );
   await PrefHelper.init();
   await AppVersion.getVersion();
-  await NetworkConnection.instance.InternetAvailable();
+  await NetworkConnection.instance.internetAvailable();
 }
 
 class MyApp extends StatelessWidget {
