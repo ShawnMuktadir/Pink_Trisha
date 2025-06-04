@@ -49,35 +49,6 @@
           ]
         }
       }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:451418365198:android:64f917dca1c0014fab0b5f",
-        "android_client_info": {
-          "package_name": "com.pinktrisha.app"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "451418365198-558npo7mp37gl9htj26u1afj5kllhcl0.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDyVr33PaR-OB8Yk_AFcX8DbJEROkDxgJQ"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "451418365198-558npo7mp37gl9htj26u1afj5kllhcl0.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
     }
   ],
   "configuration_version": "1"
