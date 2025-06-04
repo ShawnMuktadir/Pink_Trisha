@@ -11,7 +11,7 @@ class NetworkConnection {
   bool isInternet = true;
   List<APIParams> apiStack = [];
 
-  Future<void> InternetAvailable() async {
+  Future<void> internetAvailable() async {
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
         isInternet = false;
