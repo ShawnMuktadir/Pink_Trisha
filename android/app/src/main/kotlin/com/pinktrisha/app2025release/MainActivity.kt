@@ -1,4 +1,4 @@
-package com.pinktrisha;
+package com.pinktrisha.app2025release;
 
 import io.flutter.embedding.android.FlutterActivity
 

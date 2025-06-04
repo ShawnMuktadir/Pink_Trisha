@@ -52,12 +52,20 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:451418365198:android:64f917dca1c0014fab0b5f",
+        "mobilesdk_app_id": "1:451418365198:android:cb0b6f55fbc4df79ab0b5f",
         "android_client_info": {
-          "package_name": "com.pinktrisha.app"
+          "package_name": "com.pinktrisha.app2025release"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "451418365198-bronpi96q4ev4soaos7c374pe2tar1ti.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pinktrisha.app2025release",
+            "certificate_hash": "a13ed6c21aacda5bfb1c3f3d506fd5377de7200b"
+          }
+        },
         {
           "client_id": "451418365198-558npo7mp37gl9htj26u1afj5kllhcl0.apps.googleusercontent.com",
           "client_type": 3
