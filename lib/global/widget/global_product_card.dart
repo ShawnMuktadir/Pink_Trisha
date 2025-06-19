@@ -225,7 +225,7 @@ class _GlobalProductCardState extends State<GlobalProductCard> {
                     children: [
                       if (widget.price != 0) ...[
                         GlobalText(
-                          str: 'BDT${widget.offerPrice}',
+                          str: 'BDT ${widget.offerPrice}',
                           color: KColor.deepGrey.color,
                           fontSize: 14,
                           maxLines: 1,
@@ -241,7 +241,7 @@ class _GlobalProductCardState extends State<GlobalProductCard> {
                       GlobalText(
                         textAlign: TextAlign.center,
                         str:
-                            '${widget.price != 0 ? widget.price : widget.offerPrice ?? "0"}',
+                            'BDT ${widget.price != 0 ? widget.price : widget.offerPrice ?? "0"}',
                         color: KColor.deep2.color,
                         fontSize: 16,
                         maxLines: 1,
@@ -298,7 +298,6 @@ class _GlobalProductCardState extends State<GlobalProductCard> {
                           child: InkWell(
                             borderRadius: BorderRadius.circular(4),
                             onTap: () {
-                              // ViewUtil.SSLSnackbar("msg....................");
                               cartCon.toggleCartButton(CartProduct(
                                   id: widget.id.toString(),
                                   name: widget.title,
