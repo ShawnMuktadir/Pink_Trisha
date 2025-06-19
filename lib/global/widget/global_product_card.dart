@@ -242,7 +242,7 @@ class _GlobalProductCardState extends State<GlobalProductCard> {
                         textAlign: TextAlign.center,
                         str:
                             'BDT ${widget.price != 0 ? widget.price : widget.offerPrice ?? "0"}',
-                        color: KColor.deep2.color,
+                        color: KColor.primary.color,
                         fontSize: 16,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
