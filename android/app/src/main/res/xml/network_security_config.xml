@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
+    <!-- Allow cleartext traffic for all domains (only for testing, can remove later) -->
+    <base-config cleartextTrafficPermitted="true" />
+
+    <!-- Sandbox domain -->
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">sandbox.sslcommerz.com</domain>
+    </domain-config>
+
+    <!-- Live SSLCommerz domain -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">securepay.sslcommerz.com</domain>
+    </domain-config>
+
+    <!-- Your image server domain -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">s2.pinktrisha.com</domain>
     </domain-config>
 </network-security-config>

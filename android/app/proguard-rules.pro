@@ -38,3 +38,16 @@
 
 -keep class io.flutter.** { *; }
 
+# Allow all networking and image classes
+-keep class okhttp3.** { *; }
+-keep class okio.** { *; }
+-keep class com.bumptech.glide.** { *; }
+-dontwarn okhttp3.**
+-dontwarn okio.**
+-dontwarn com.bumptech.glide.**
+
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+

@@ -105,7 +105,7 @@ class GlobalCartItem extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
+                      SizedBox(
                         // color: Colors.yellow,
                         width: 190.w,
                         child: GlobalText(
@@ -132,12 +132,15 @@ class GlobalCartItem extends StatelessWidget {
                       VerticalSpace(
                         height: 8,
                       ),
-                      GlobalText(
-                        str: availableProduct ?? "",
-                        color: KColor.cardBlueText.color,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        height: 0.10,
+                      Visibility(
+                        visible: false,
+                        child: GlobalText(
+                          str: availableProduct ?? "",
+                          color: KColor.cardBlueText.color,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          height: 0.10,
+                        ),
                       ),
                       VerticalSpace(
                         height: 11,

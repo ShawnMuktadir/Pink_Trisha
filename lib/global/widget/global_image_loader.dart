@@ -21,6 +21,7 @@ class GlobalImageLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (imageFor == ImageFor.network) {
+      print("Loading image from: $imagePath");
       return Image.network(
         imagePath,
         height: height,
@@ -31,12 +32,14 @@ class GlobalImageLoader extends StatelessWidget {
           return SizedBox(
             height: height,
             width: width,
+            child: const Center(child: CircularProgressIndicator()),
           );
         },
         errorBuilder: (context, exception, stackTrace) {
           return SizedBox(
             height: height,
             width: width,
+            child: const Center(child: Icon(Icons.broken_image)),
           );
         },
       );
@@ -46,7 +49,11 @@ class GlobalImageLoader extends StatelessWidget {
         height: height,
         width: width,
         fit: fit,
-        errorBuilder: (context, exception, stackTrace) => const Text('😢'),
+        errorBuilder: (context, exception, stackTrace) => SizedBox(
+          height: height,
+          width: width,
+          child: const Center(child: Icon(Icons.broken_image)),
+        ),
       );
     }
   }
