@@ -62,6 +62,13 @@ class GlobalCartItem extends StatelessWidget {
           decoration: BoxDecoration(
             color: KColor.primary.color,
             borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: KColor.grey2.color,
+                blurRadius: 8,
+                offset: Offset(0, 4),
+              ),
+            ],
           ),
           child: Icon(
             Icons.delete,
@@ -103,12 +110,11 @@ class GlobalCartItem extends StatelessWidget {
                 width: 8,
               ),
               Expanded(
-                child: SizedBox(
+                child: Container(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        // color: Colors.yellow,
                         width: 190.w,
                         child: GlobalText(
                           str: titleText ?? "",

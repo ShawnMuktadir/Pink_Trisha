@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pink_by_trisha_app/global/widget/global_back_button.dart';
 import 'package:pink_by_trisha_app/global/widget/global_background.dart';
 import 'package:pink_by_trisha_app/global/widget/global_loader.dart';
@@ -33,7 +34,6 @@ class _WishListScreenState extends State<WishListScreen> {
                         child: SizedBox(child: CircularProgressIndicator()),
                       )
                     : Expanded(
-                        //    flex: 1,
                         child: RefreshIndicator(
                           onRefresh: () async {
                             await controller.getWishList();
@@ -46,7 +46,9 @@ class _WishListScreenState extends State<WishListScreen> {
                                 : Padding(
                                     padding: const EdgeInsets.only(
                                         top: 20, right: 24, left: 24),
-                                    child: Column(
+                                    child:
+
+                                    /*Column(
                                       children: [
                                         ...state.wishItems!
                                             .map((e) => WishCard(
@@ -92,7 +94,36 @@ class _WishListScreenState extends State<WishListScreen> {
                                                         "COD"))
                                             .toList(),
                                       ],
+                                    ),*/
+
+                                    Column(
+                                      children: [
+                                        for (int i = 0; i < state.wishItems!.length; i++) ...[
+                                          WishCard(
+                                            imagePath: state.wishItems![i].product.productImages?.first.src,
+                                            onTap: () {
+                                              controller.deleteWish(
+                                                id: state.wishItems![i].product.id!,
+                                                loaderScreenType: LoaderScreenType.wishList,
+                                              );
+                                            },
+                                            name: state.wishItems![i].product.name ?? "",
+                                            details: state.wishItems![i].product.shortDescription ?? "",
+                                            slug: state.wishItems![i].product.slug!,
+                                            price: state.wishItems![i].product.price.toString(),
+                                            offerPrice: state.wishItems![i].product.offerPrice.toString(),
+                                            id: state.wishItems![i].product.id!,
+                                            isPreorder: state.wishItems![i].product.paymentType == "DVP",
+                                            brandId: state.wishItems![i].product.brandId,
+                                            categoryId: state.wishItems![i].product.categoryId,
+                                            vendorId: state.wishItems![i].product.vendorId,
+                                            paymentType: state.wishItems![i].product.paymentType ?? "COD",
+                                          ),
+                                          if (i != state.wishItems!.length - 1) SizedBox(height: 16),
+                                        ]
+                                      ],
                                     ),
+
                                   ),
                           ),
                         ),

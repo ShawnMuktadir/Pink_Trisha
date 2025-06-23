@@ -46,70 +46,65 @@ class GlobalButton extends StatelessWidget {
     Color btnColor = btnBackgroundActiveColor ?? KColor.accent.color;
 
     return SizedBox(
-      width: btnWidth != null ? btnWidth! + 4 : null,
-      //height: btnHeight,
-      child: Center(
-        child: ElevatedButton(
-          style: ButtonStyle(
-            shape: WidgetStateProperty.resolveWith<OutlinedBorder>(
-              (states) {
-                return RoundedRectangleBorder(
-                  borderRadius: isRounded
-                      ? BorderRadius.circular(
-                          roundedBorderRadius.r,
-                        )
-                      : BorderRadius.zero,
-                );
-              },
-            ),
-            backgroundColor: WidgetStateProperty.resolveWith<Color>(
-              (Set<WidgetState> states) =>
-                  onPressed != null ? btnColor : KColor.divider.color,
-            ),
-            elevation: WidgetStateProperty.resolveWith(
-              (states) => 0.0,
-            ),
+      width: btnWidth ?? MediaQuery.of(context).size.width,
+      child: ElevatedButton(
+        style: ButtonStyle(
+          shape: WidgetStateProperty.resolveWith<OutlinedBorder>(
+            (states) {
+              return RoundedRectangleBorder(
+                borderRadius: isRounded
+                    ? BorderRadius.circular(
+                        roundedBorderRadius.r,
+                      )
+                    : BorderRadius.zero,
+              );
+            },
           ),
-          onPressed: onPressed,
-          child: Padding(
-            padding: padding ?? const EdgeInsets.all(12),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                isLoading
-                    ? SizedBox(
-                        height: textFontSize != null ? (textFontSize! + 4) : 22,
-                        width: textFontSize != null ? (textFontSize! + 4) : 22,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: textColor ?? KColor.white.color,
-                        ))
-                    : Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          isPlusButton
-                              ? GlobalSvgLoader(
-                                  imagePath:
-                                      KAssetName.icPlusWhitesvg.imagePath,
-                                  width: 24.w,
-                                  height: 24.h,
-                                )
-                              : const SizedBox.shrink(),
-                          GlobalText(
-                            str: buttonText,
-                            fontWeight: textFontWeight ?? FontWeight.w600,
-                            fontSize: textFontSize ?? 16,
-                            color: textColor ?? KColor.white.color,
-                            height: textFontHeight ?? 0.09,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
+          backgroundColor: WidgetStateProperty.resolveWith<Color>(
+            (Set<WidgetState> states) =>
+                onPressed != null ? btnColor : KColor.divider.color,
+          ),
+          elevation: WidgetStateProperty.resolveWith(
+            (states) => 0.0,
+          ),
+        ),
+        onPressed: onPressed,
+        child: Padding(
+          padding: padding ?? const EdgeInsets.all(12),
+          child: isLoading
+              ? SizedBox(
+                  height: textFontSize != null ? (textFontSize! + 4) : 22,
+                  width: textFontSize != null ? (textFontSize! + 4) : 22,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: textColor ?? KColor.white.color,
+                  ),
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    if (isPlusButton)
+                      GlobalSvgLoader(
+                        imagePath: KAssetName.icPlusWhitesvg.imagePath,
+                        width: 24.w,
+                        height: 24.h,
                       ),
-              ],
-            ),
-          ),
+                    //if (isPlusButton) const SizedBox(width: 8),
+                    Flexible(
+                      child: GlobalText(
+                        str: buttonText,
+                        fontWeight: textFontWeight ?? FontWeight.w600,
+                        fontSize: textFontSize ?? 14,
+                        color: textColor ?? KColor.white.color,
+                        height: textFontHeight ?? 0.09,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
+                    ),
+                  ],
+                ),
         ),
       ),
     );

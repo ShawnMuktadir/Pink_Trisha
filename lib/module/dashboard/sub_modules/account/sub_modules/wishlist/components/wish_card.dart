@@ -74,12 +74,14 @@ class _WishCardState extends State<WishCard> {
                     slug: widget.slug, id: widget.id));
           },
           child: GlobalContainer(
-              height: 434.h,
+              //height: 434.h,
               width: double.infinity,
               borderRadius: 8.r,
               backgroundColor: KColor.card.color,
               padding: const EdgeInsets.all(16.0),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   GlobalContainer(
                       height: 282.h,
@@ -126,102 +128,100 @@ class _WishCardState extends State<WishCard> {
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: SingleChildScrollView(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (widget.price != null &&
-                                    widget.price.toString().isNotEmpty &&
-                                    double.tryParse(widget.price.toString()) !=
-                                        0.0) ...[
-                                  GlobalText(
-                                    str: 'BDT ${widget.price}',
-                                    color: KColor.deepGrey.color,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w400,
-                                    maxLines: 1,
-                                    decoration: TextDecoration.lineThrough,
-                                  ),
-                                  const SizedBox(height: 4),
-                                ],
-                                SizedBox(
-                                  width: 160,
-                                  child: GlobalText(
-                                    str: 'BDT ${widget.offerPrice}',
-                                    color: KColor.midPrimary.color,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.w600,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (widget.price != null &&
+                                  widget.price.toString().isNotEmpty &&
+                                  double.tryParse(widget.price.toString()) !=
+                                      0.0) ...[
+                                GlobalText(
+                                  str: 'BDT ${widget.price}',
+                                  color: KColor.deepGrey.color,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w400,
+                                  maxLines: 1,
+                                  decoration: TextDecoration.lineThrough,
                                 ),
+                                const SizedBox(height: 4),
                               ],
-                            ),
+                              SizedBox(
+                                width: 160,
+                                child: GlobalText(
+                                  str: 'BDT ${widget.offerPrice}',
+                                  color: KColor.midPrimary.color,
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        VerticalSpace(
-                          height: 8.h,
-                        ),
-                        InkWell(
-                            onTap: () {
-                              controller.toggleCartButton(CartProduct(
-                                  id: widget.id.toString(),
-                                  name: widget.name,
-                                  slug: widget.slug,
-                                  shortDescription: widget.details,
-                                  imageUrl: widget.imagePath,
-                                  price: widget.price,
-                                  offerPrice: widget.offerPrice,
-                                  productImage: widget.imagePath,
-                                  isPreorder: widget.isPreorder,
-                                  quantity: 1,
-                                  brandId: widget.brandId,
-                                  categoryId: widget.categoryId,
-                                  paymentType: widget.paymentType,
-                                  vendorId: widget.vendorId,
-                                  currentAttributeValueId: [],
-                                  nameBn: ''));
-                            },
-                            child: Container(
-                              width: 40,
-                              height: 40,
-                              decoration: ShapeDecoration(
-                                color: isCartSelected
-                                    ? KColor.deepPrimary.color
-                                    : KColor.background7.color,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4)),
-                              ),
-                              child: Material(
-                                color: isCartSelected
-                                    ? KColor.deepPrimary.color
-                                    : KColor.background7.color,
-                                borderRadius: BorderRadius.circular(4),
-                                child: GlobalSvgLoader(
-                                    height: 40.h,
-                                    width: 40.w,
-                                    imagePath: isCartSelected
-                                        ? KAssetName
-                                            .icCartButtonSelectedsvg.imagePath
-                                        : KAssetName.icCartButtonUnselectedsvg
-                                            .imagePath),
-                              ),
-                            )
-                            //  GlobalSvgLoader(
-                            //     height: 40.h,
-                            //     width: 40.w,
-                            //     imagePath: isCartSelected
-                            //         ? KAssetName.icCartButtonSelectedsvg.imagePath
-                            //         : KAssetName.icCartButtonUnselectedsvg.imagePath),
-                            )
-                      ],
-                    ),
+                      ),
+                      VerticalSpace(
+                        height: 8.h,
+                      ),
+                      InkWell(
+                          onTap: () {
+                            controller.toggleCartButton(CartProduct(
+                                id: widget.id.toString(),
+                                name: widget.name,
+                                slug: widget.slug,
+                                shortDescription: widget.details,
+                                imageUrl: widget.imagePath,
+                                price: widget.price,
+                                offerPrice: widget.offerPrice,
+                                productImage: widget.imagePath,
+                                isPreorder: widget.isPreorder,
+                                quantity: 1,
+                                brandId: widget.brandId,
+                                categoryId: widget.categoryId,
+                                paymentType: widget.paymentType,
+                                vendorId: widget.vendorId,
+                                currentAttributeValueId: [],
+                                nameBn: ''));
+                          },
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: ShapeDecoration(
+                              color: isCartSelected
+                                  ? KColor.deepPrimary.color
+                                  : KColor.background7.color,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4)),
+                            ),
+                            child: Material(
+                              color: isCartSelected
+                                  ? KColor.deepPrimary.color
+                                  : KColor.background7.color,
+                              borderRadius: BorderRadius.circular(4),
+                              child: GlobalSvgLoader(
+                                  height: 40.h,
+                                  width: 40.w,
+                                  imagePath: isCartSelected
+                                      ? KAssetName
+                                          .icCartButtonSelectedsvg.imagePath
+                                      : KAssetName.icCartButtonUnselectedsvg
+                                          .imagePath),
+                            ),
+                          )
+                          //  GlobalSvgLoader(
+                          //     height: 40.h,
+                          //     width: 40.w,
+                          //     imagePath: isCartSelected
+                          //         ? KAssetName.icCartButtonSelectedsvg.imagePath
+                          //         : KAssetName.icCartButtonUnselectedsvg.imagePath),
+                          )
+                    ],
                   ),
                 ],
               )),

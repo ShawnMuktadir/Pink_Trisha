@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pink_by_trisha_app/utils/styles/k_colors.dart';
 
 class GlobalContainer extends StatelessWidget {
   final double borderRadius;
@@ -28,16 +29,23 @@ class GlobalContainer extends StatelessWidget {
     return Container(
       height: height,
       width: width,
-      padding: onTap==null? padding:null,
+      padding: onTap == null ? padding : null,
       margin: margin,
       decoration: BoxDecoration(
         color: backgroundColor,
         borderRadius: borderCornerRadius ?? BorderRadius.circular(borderRadius),
+        boxShadow: [
+          BoxShadow(
+            color: KColor.softGrey.color,
+            blurRadius: 8,
+            offset: Offset(0, 4),
+          ),
+        ],
       ),
       child: onTap == null
           ? child
           : Material(
-            color: backgroundColor,
+              color: backgroundColor,
               borderRadius:
                   borderCornerRadius ?? BorderRadius.circular(borderRadius),
               child: InkWell(

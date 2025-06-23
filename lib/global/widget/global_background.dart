@@ -11,7 +11,7 @@ class GlobalBackground extends StatelessWidget {
       resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Container(
-          width: context.width,
+          width: double.infinity,
           constraints: BoxConstraints(
             minHeight: context.height,
           ),

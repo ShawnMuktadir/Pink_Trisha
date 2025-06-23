@@ -143,6 +143,7 @@ class OrderCard extends StatelessWidget {
                 right: 0,
                 bottom: 0,
                 child: GlobalButton(
+                  btnWidth: 120.w,
                   btnHeight: 32,
                   onPressed: () {
                     Navigation.push(context,
