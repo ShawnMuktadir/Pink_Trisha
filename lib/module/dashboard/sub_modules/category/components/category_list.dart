@@ -11,7 +11,6 @@ import 'package:pink_by_trisha_app/utils/enum.dart';
 import 'package:pink_by_trisha_app/utils/extension.dart';
 import 'package:pink_by_trisha_app/utils/navigation.dart';
 import 'package:pink_by_trisha_app/utils/styles/k_assets.dart';
-import '../../../../../utils/app_util.dart';
 import '../../../../../utils/styles/k_colors.dart';
 import '../../home/components/home_categories/controller/category_controller.dart';
 

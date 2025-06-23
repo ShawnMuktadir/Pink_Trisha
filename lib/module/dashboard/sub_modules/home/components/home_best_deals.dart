@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -55,7 +54,7 @@ class HomeBestDeals extends ConsumerWidget {
                         return GlobalProductCard(
                           imageUrl: product?.imageUrl,
                           id: product!.id,
-                          title: product.name ?? "",
+                          title: product.name,
                           subTitle: product.shortDescription ?? "",
                           price: product.price,
                           offerPrice: product.offerPrice,

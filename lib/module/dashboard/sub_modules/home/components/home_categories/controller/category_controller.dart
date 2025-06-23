@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pink_by_trisha_app/constant/app_url.dart';
 import 'package:pink_by_trisha_app/data_provider/api_client.dart';
 import 'package:pink_by_trisha_app/utils/extension.dart';
-import 'package:pink_by_trisha_app/utils/network_connection.dart';
 
 import '../../../../../../../utils/enum.dart';
 import '../model/category_response.dart';

@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pink_by_trisha_app/global/widget/global_svg_loader.dart';
 import 'package:pink_by_trisha_app/module/dashboard/sub_modules/cart/components/cart_product_qty_selection.dart';
 import 'package:pink_by_trisha_app/module/dashboard/sub_modules/cart/controller/cart_controller.dart';
-import 'package:pink_by_trisha_app/module/dashboard/sub_modules/home/model/product_details_response.dart';
-import 'package:pink_by_trisha_app/module/dashboard/sub_modules/home/sub_modules/product_details/components/product_details_cart_button.dart';
 import 'package:pink_by_trisha_app/module/dashboard/sub_modules/home/sub_modules/product_details/controller/product_details_state.dart';
-import 'package:pink_by_trisha_app/module/dashboard/sub_modules/home/sub_modules/product_details/model/product_details_response.dart';
 import 'package:pink_by_trisha_app/utils/enum.dart';
 import 'package:pink_by_trisha_app/utils/extension.dart';
 import 'package:pink_by_trisha_app/utils/styles/k_assets.dart';

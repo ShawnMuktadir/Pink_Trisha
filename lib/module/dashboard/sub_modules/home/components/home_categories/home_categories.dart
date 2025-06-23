@@ -19,7 +19,7 @@ import 'package:pink_by_trisha_app/utils/styles/k_colors.dart';
 import '../../../../../../utils/app_util.dart';
 
 class HomeCategories extends ConsumerWidget {
-  const HomeCategories({Key? key}) : super(key: key);
+  const HomeCategories({super.key});
 
   @override
   Widget build(BuildContext context, ref) {
@@ -115,8 +115,10 @@ class HomeCategories extends ConsumerWidget {
                                         top: 13,
                                         left: 11,
                                         child: GlobalText(
-                                          str: capitalizeFirstLetter(categoryState
-                                              .cateAllData[index].name) ??
+                                          str: capitalizeFirstLetter(
+                                                  categoryState
+                                                      .cateAllData[index]
+                                                      .name) ??
                                               '',
                                           color: const Color(0xFF2C2328),
                                           fontSize: 12,
