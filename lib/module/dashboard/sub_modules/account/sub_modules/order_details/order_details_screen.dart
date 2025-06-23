@@ -72,7 +72,6 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                     data.orderItems!.isNotEmpty;
                                 final firstItem =
                                     hasItem ? data.orderItems?.first : null;
-
                                 return Column(
                                   children: [
                                     OrderDeliverySection(

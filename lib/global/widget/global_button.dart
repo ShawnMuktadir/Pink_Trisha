@@ -79,40 +79,34 @@ class GlobalButton extends StatelessWidget {
               children: [
                 isLoading
                     ? SizedBox(
-                        height:
-                            textFontSize != null ? (textFontSize! + 4) : 22,
-                        width:
-                            textFontSize != null ? (textFontSize! + 4) : 22,
+                        height: textFontSize != null ? (textFontSize! + 4) : 22,
+                        width: textFontSize != null ? (textFontSize! + 4) : 22,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
                           color: textColor ?? KColor.white.color,
                         ))
-                    : Expanded(
-                      child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            isPlusButton
-                                ? GlobalSvgLoader(
-                                    imagePath:
-                                        KAssetName.icPlusWhitesvg.imagePath,
-                                    width: 24.w,
-                                    height: 24.h,
-                                  )
-                                : const SizedBox.shrink(),
-                            Expanded(
-                              child: GlobalText(
-                                str: buttonText,
-                                fontWeight: textFontWeight ?? FontWeight.w600,
-                                fontSize: textFontSize ?? 16,
-                                color: textColor ?? KColor.white.color,
-                                height: textFontHeight ?? 0.09,
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                    ),
+                    : Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          isPlusButton
+                              ? GlobalSvgLoader(
+                                  imagePath:
+                                      KAssetName.icPlusWhitesvg.imagePath,
+                                  width: 24.w,
+                                  height: 24.h,
+                                )
+                              : const SizedBox.shrink(),
+                          GlobalText(
+                            str: buttonText,
+                            fontWeight: textFontWeight ?? FontWeight.w600,
+                            fontSize: textFontSize ?? 16,
+                            color: textColor ?? KColor.white.color,
+                            height: textFontHeight ?? 0.09,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
               ],
             ),
           ),

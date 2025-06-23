@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pink_by_trisha_app/global/widget/global_container.dart';
@@ -17,9 +14,8 @@ import 'package:pink_by_trisha_app/utils/enum.dart';
 import 'package:pink_by_trisha_app/utils/navigation.dart';
 import 'package:pink_by_trisha_app/utils/styles/k_assets.dart';
 import 'package:pink_by_trisha_app/utils/styles/k_colors.dart';
-import 'package:pink_by_trisha_app/utils/view_util.dart';
 
-class WishCard extends StatelessWidget {
+class WishCard extends StatefulWidget {
   const WishCard(
       {super.key,
       required this.id,
@@ -51,6 +47,16 @@ class WishCard extends StatelessWidget {
   final void Function() onTap;
 
   @override
+  State<WishCard> createState() => _WishCardState();
+}
+
+class _WishCardState extends State<WishCard> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer(
       builder: (_, WidgetRef ref, __) {
@@ -58,13 +64,14 @@ class WishCard extends StatelessWidget {
         final state = ref.watch(cartController);
 
         final isCartSelected = state.cartProducts
-            .where((element) => element.id == id.toString())
+            .where((element) => element.id == widget.id.toString())
             .isNotEmpty;
         return GestureDetector(
           onTap: () {
             Navigation.push(context,
                 appRoutes: AppRoutes.productDetails,
-                arguments: ProductDetailsScreenModel(slug: slug, id: id));
+                arguments: ProductDetailsScreenModel(
+                    slug: widget.slug, id: widget.id));
           },
           child: GlobalContainer(
               height: 434.h,
@@ -87,17 +94,17 @@ class WishCard extends StatelessWidget {
                               right: 0,
                               left: 0,
                               child: GlobalImageLoader(
-                                  imageFor: imagePath != null
+                                  imageFor: widget.imagePath != null
                                       ? ImageFor.network
                                       : ImageFor.asset,
-                                  imagePath: imagePath ??
+                                  imagePath: widget.imagePath ??
                                       KAssetName.icEmptyImage2png.imagePath)),
                           Positioned(
                               top: 0,
                               right: 0,
                               child: InkWell(
                                 onTap: () {
-                                  onTap();
+                                  widget.onTap();
                                 },
                                 child: GlobalSvgLoader(
                                     imagePath:
@@ -111,7 +118,7 @@ class WishCard extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(right: 43),
                       child: GlobalText(
-                        str: name ?? "",
+                        str: widget.name ?? "",
                         maxLines: 2,
                         color: KColor.deep2.color,
                         fontSize: 20,
@@ -123,56 +130,61 @@ class WishCard extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Wrap(
-                          alignment: WrapAlignment.start,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            GlobalText(
-                              str: 'BDT $price',
-                              color: KColor.deepGrey.color,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w400,
-                              maxLines: 1,
-                              decoration: TextDecoration.lineThrough,
+                        Flexible(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (widget.price != null &&
+                                    widget.price.toString().isNotEmpty &&
+                                    double.tryParse(widget.price.toString()) !=
+                                        0.0) ...[
+                                  GlobalText(
+                                    str: 'BDT ${widget.price}',
+                                    color: KColor.deepGrey.color,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w400,
+                                    maxLines: 1,
+                                    decoration: TextDecoration.lineThrough,
+                                  ),
+                                  const SizedBox(height: 4),
+                                ],
+                                SizedBox(
+                                  width: 160,
+                                  child: GlobalText(
+                                    str: 'BDT ${widget.offerPrice}',
+                                    color: KColor.midPrimary.color,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w600,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
                             ),
-                            const HorizontalSpace(
-                              width: 8,
-                            ),
-                            Container(
-                              width: 160,
-                              child: GlobalText(
-                                str: 'BDT $offerPrice',
-                                color: KColor.midPrimary.color,
-                                fontSize: 22,
-                                fontWeight: FontWeight.w600,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                         VerticalSpace(
                           height: 8.h,
                         ),
                         InkWell(
                             onTap: () {
-                              //  ViewUtil.SSLSnackbar("msg....dsf................");
-
                               controller.toggleCartButton(CartProduct(
-                                  id: id.toString(),
-                                  name: name,
-                                  slug: slug,
-                                  shortDescription: details,
-                                  imageUrl: imagePath,
-                                  price: price,
-                                  offerPrice: offerPrice,
-                                  productImage: imagePath,
-                                  isPreorder: isPreorder,
+                                  id: widget.id.toString(),
+                                  name: widget.name,
+                                  slug: widget.slug,
+                                  shortDescription: widget.details,
+                                  imageUrl: widget.imagePath,
+                                  price: widget.price,
+                                  offerPrice: widget.offerPrice,
+                                  productImage: widget.imagePath,
+                                  isPreorder: widget.isPreorder,
                                   quantity: 1,
-                                  brandId: brandId,
-                                  categoryId: categoryId,
-                                  paymentType: paymentType,
-                                  vendorId: vendorId,
+                                  brandId: widget.brandId,
+                                  categoryId: widget.categoryId,
+                                  paymentType: widget.paymentType,
+                                  vendorId: widget.vendorId,
                                   currentAttributeValueId: [],
                                   nameBn: ''));
                             },

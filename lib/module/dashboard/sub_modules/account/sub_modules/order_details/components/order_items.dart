@@ -8,6 +8,10 @@ import 'package:pink_by_trisha_app/module/dashboard/sub_modules/home/sub_modules
 import 'package:pink_by_trisha_app/utils/enum.dart';
 import 'package:pink_by_trisha_app/utils/styles/styles.dart';
 
+import '../../../../../../../utils/app_routes.dart';
+import '../../../../../../../utils/navigation.dart';
+import '../../../../home/sub_modules/product_details/product_details_screen.dart';
+
 class OrderItemsSection extends StatelessWidget {
   const OrderItemsSection({super.key, required this.cartProducts});
 
@@ -21,18 +25,18 @@ class OrderItemsSection extends StatelessWidget {
         children: [
           ...cartProducts
               .map((e) => OrderItemCard(
-                    productName: e.name ?? "",
-                    productImage: e.imageUrl ?? "",
-                    productPrice: e.price == 0
-                        ? e.offerPrice.toString()
-                        : e.price.toString(),
-                    productQuantity: e.quantity.toString(),
-                    currentAttributeValueId: e.currentAttributeValueId,
-                    productBorderColor: "",
-                    productDetails: e.shortDescription ?? "",
-                    attributes: e.attributes,
-                    variants: e.variants,
-                  ))
+                productName: e.name ?? "",
+                productImage: e.imageUrl ?? "",
+                productPrice: e.price == 0
+                    ? e.offerPrice.toString()
+                    : e.price.toString(),
+                productQuantity: e.quantity.toString(),
+                currentAttributeValueId: e.currentAttributeValueId,
+                productBorderColor: "",
+                productDetails: e.shortDescription ?? "",
+                attributes: e.attributes,
+                variants: e.variants,
+              ))
               .toList()
         ],
       ),

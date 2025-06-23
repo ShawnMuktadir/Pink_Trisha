@@ -1,18 +1,15 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pink_by_trisha_app/constant/app_url.dart';
 import 'package:pink_by_trisha_app/constant/constant_key.dart';
 import 'package:pink_by_trisha_app/data_provider/api_client.dart';
 import 'package:pink_by_trisha_app/data_provider/pref_helper.dart';
 import 'package:pink_by_trisha_app/data_provider/storage_controller.dart';
-import 'package:pink_by_trisha_app/module/dashboard/sub_modules/account/components/account_login_dialogue.dart';
 import 'package:pink_by_trisha_app/module/dashboard/sub_modules/account/sub_modules/wishlist/controller/wish_state.dart';
 import 'package:pink_by_trisha_app/module/dashboard/sub_modules/account/sub_modules/wishlist/model/wish_data.dart';
 import 'package:pink_by_trisha_app/module/dashboard/sub_modules/account/sub_modules/wishlist/model/wish_list_response.dart';
 import 'package:pink_by_trisha_app/utils/enum.dart';
 import 'package:pink_by_trisha_app/utils/extension.dart';
-import 'package:pink_by_trisha_app/utils/network_connection.dart';
 import 'package:pink_by_trisha_app/utils/view_util.dart';
 
 final wishController =
@@ -106,6 +103,7 @@ class WishController extends StateNotifier<WishState> {
   }
 
   void checkLogin() {}
+
   Future<void> createWish(
       {required CreateWishData createWishData,
       required LoaderScreenType loaderScreenType}) async {
