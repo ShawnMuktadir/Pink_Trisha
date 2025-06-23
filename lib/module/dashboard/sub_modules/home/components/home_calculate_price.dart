@@ -647,12 +647,14 @@ class CountrySelection extends StatelessWidget {
                               imageFor: ImageFor.network,
                             ),
                             const SizedBox(width: 8),
-                            GlobalText(
-                              str: country.name ?? "",
-                              color: KColor.deep2.color,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              height: 0,
+                            Expanded(
+                              child: GlobalText(
+                                str: country.name ?? "",
+                                color: KColor.deep2.color,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                height: 0,
+                              ),
                             ),
                           ],
                         ),
@@ -681,8 +683,14 @@ class CountrySelection extends StatelessWidget {
   }
 
   String getFlagUrl(String? currencyCode) {
-    final countryCode =
-        currencyToCountryCode[currencyCode?.toUpperCase()] ?? 'us';
+    final code = currencyCode?.toUpperCase();
+    final countryCode = currencyToCountryCode[code];
+
+    if (countryCode == null) {
+      print("Unknown currency code: $code — using fallback flag.");
+      return "https://flagcdn.com/w40/un.png"; // fallback flag (e.g. UN)
+    }
+
     return "https://flagcdn.com/w40/$countryCode.png";
   }
 }

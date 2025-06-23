@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pink_by_trisha_app/global/widget/global_image_loader.dart';
 import 'package:pink_by_trisha_app/global/widget/global_svg_loader.dart';
 import 'package:pink_by_trisha_app/global/widget/global_text.dart';
@@ -10,6 +11,7 @@ import 'package:pink_by_trisha_app/utils/enum.dart';
 import 'package:pink_by_trisha_app/utils/extension.dart';
 import 'package:pink_by_trisha_app/utils/navigation.dart';
 import 'package:pink_by_trisha_app/utils/styles/k_assets.dart';
+import '../../../../../utils/app_util.dart';
 import '../../../../../utils/styles/k_colors.dart';
 import '../../home/components/home_categories/controller/category_controller.dart';
 
@@ -35,11 +37,6 @@ class _CategoryListSectionState extends State<CategoryListSection> {
     return Consumer(builder: (context, ref, child) {
       final controller = ref.read(categoryController.notifier);
       final state = ref.watch(categoryController);
-      final length = state.cateAllData.length;
-      final int lastRow = length > 2 ? (length % 3) : 0;
-      print(lastRow);
-      final int fullRow = length - lastRow;
-      print(fullRow);
 
       return SizedBox(
         width: MediaQuery.of(context).size.width,
@@ -60,46 +57,25 @@ class _CategoryListSectionState extends State<CategoryListSection> {
                       ),
                     ),
                   )
-                : SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: context.width,
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Column(
-                            //crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              fullRow != 0
-                                  ? Wrap(
-                                      spacing: 12,
-                                      runSpacing: 12,
-                                      alignment: WrapAlignment.spaceBetween,
-                                      children: List.generate(
-                                        fullRow,
-                                        (index) => CategoryItem(
-                                            state.cateAllData[index]),
-                                      ),
-                                    )
-                                  : const SizedBox.shrink(),
-                              const SizedBox(height: 12),
-                              lastRow == 0
-                                  ? Wrap(
-                                      spacing: 12,
-                                      runSpacing: 12,
-                                      children: List.generate(
-                                        lastRow,
-                                        (index) => CategoryItem(
-                                            state.cateAllData[fullRow + index]),
-                                      ),
-                                    )
-                                  : const SizedBox.shrink(),
-                            ],
-                          ),
-                        ),
-                      ],
+                : Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: GridView.builder(
+                      //padding: const EdgeInsets.symmetric(vertical: 6),
+                      itemCount: state.cateAllData.length,
+                      shrinkWrap: false,
+                      physics: const BouncingScrollPhysics(),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 10,
+                        childAspectRatio: 0.85, // Control width:height ratio
+                      ),
+                      itemBuilder: (context, index) {
+                        return CategoryItem(state.cateAllData[index]);
+                      },
                     ),
-                  ),
+                ),
       );
     });
   }
@@ -127,7 +103,7 @@ class CategoryItem extends StatelessWidget {
         );
       },
       child: Container(
-        width: 100,
+        width: 100.h,
         height: 140,
         clipBehavior: Clip.antiAlias,
         decoration: ShapeDecoration(
@@ -137,45 +113,61 @@ class CategoryItem extends StatelessWidget {
           ),
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(10.r),
           child: Stack(
             children: [
+              /// Title
               Positioned(
-                top: 13,
-                left: 11,
+                top: 10,
+                left: 10,
+                right: 10,
                 child: GlobalText(
                   str: categoryData.name ?? '',
                   color: const Color(0xFF2C2328),
-                  fontSize: 12,
+                  fontSize: 13,
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.w500,
-                  height: 0.08,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.left,
                 ),
               ),
+
+              /// SVG Background
               Positioned(
                 bottom: 0,
                 right: 0,
                 left: 0,
-                child: GlobalSvgLoader(
-                  imagePath: KAssetName.icCategoryBackgroundsvg.imagePath,
-                  fit: BoxFit.fitHeight,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 4),
+                  child: GlobalSvgLoader(
+                    imagePath: KAssetName.icCategoryBackgroundsvg.imagePath,
+                    fit: BoxFit.fitHeight,
+                    height: 80,
+                  ),
                 ),
               ),
+
+              /// Foreground Image
               Positioned(
                 bottom: 0,
                 right: 0,
                 left: 0,
-                child: GlobalImageLoader(
-                  imagePath: image ?? KAssetName.icEmptyImage2png.imagePath,
-                  imageFor: image != null ? ImageFor.network : ImageFor.asset,
-                  height: 74,
-                  fit: BoxFit.fitHeight,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 6),
+                  child: GlobalImageLoader(
+                    imagePath: image ?? KAssetName.icEmptyImage2png.imagePath,
+                    imageFor: image != null ? ImageFor.network : ImageFor.asset,
+                    height: 74,
+                    fit: BoxFit.fitHeight,
+                  ),
                 ),
               ),
             ],
           ),
         ),
-      ),
+      )
+      ,
     );
   }
 }

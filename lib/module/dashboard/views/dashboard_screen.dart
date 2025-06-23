@@ -13,7 +13,7 @@ import 'package:pink_by_trisha_app/utils/extension.dart';
 import 'package:pink_by_trisha_app/utils/styles/k_colors.dart';
 
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({Key? key}) : super(key: key);
+  const DashboardScreen({super.key});
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -53,13 +53,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
       builder: (context, ref, child) {
         final state = ref.watch(dashboardController);
         final controller = ref.read(dashboardController.notifier);
-        return WillPopScope(
-          onWillPop: () async {
-            if (state.selectedIndex == 0) {
-              return true;
+        return PopScope(
+          canPop: state.selectedIndex == 0,
+          onPopInvoked: (didPop) async {
+            if (!didPop && state.selectedIndex != 0) {
+              controller.onOptionChange(0);
             }
-            controller.onOptionChange(0);
-            return false;
           },
           child: Scaffold(
             resizeToAvoidBottomInset: false,

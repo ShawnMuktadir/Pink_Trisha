@@ -67,7 +67,7 @@ class MyApp extends StatelessWidget {
             //     : const Locale('bn', 'BD'),
             theme: ThemeData(
               progressIndicatorTheme: ProgressIndicatorThemeData(
-                color: KColor.secondary.color,
+                color: KColor.primary.color,
               ),
               textTheme: GoogleFonts.poppinsTextTheme(),
               primaryColor: KColor.primary.color,
@@ -75,6 +75,7 @@ class MyApp extends StatelessWidget {
               colorScheme: ThemeData().colorScheme.copyWith(
                     secondary: KColor.secondary.color,
                   ),
+
             ),
             home: child,
           );

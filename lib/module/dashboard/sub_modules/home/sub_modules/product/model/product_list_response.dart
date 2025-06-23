@@ -88,21 +88,31 @@ class Product {
       isFeatured: json['isFeatured'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'price': price,
+      'offerPrice': offerPrice,
+      'categoryId': categoryId,
+      'nameBn': nameBn,
+      'shortDescription': shortDescription,
+      'imageUrl': imageUrl,
+      'priceInUSD': priceInUSD,
+      'offerPriceInUSD': offerPriceInUSD,
+      'slug': slug,
+      'baseAttributeId': baseAttributeId,
+      'points': points,
+      'vendorId': vendorId,
+      'brandId': brandId,
+      'productImages': productImages?.map((e) => e.toJson()).toList(),
+      'paymentType': paymentType,
+      'quantity': quantity,
+      'isFeatured': isFeatured,
+    };
+  }
 }
-
-// class ProductImage {
-//   String? src;
-
-//   ProductImage({
-//     this.src,
-//   });
-
-//   factory ProductImage.fromJson(Map<String, dynamic> json) {
-//     return ProductImage(
-//       src: json['src'],
-//     );
-//   }
-// }
 
 class ProductImage {
   int? id;
@@ -142,6 +152,18 @@ class ProductImage {
           json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'productId': productId,
+        'src': src,
+        'alt': alt,
+        'description': description,
+        'serial': serial,
+        'status': status,
+        'createdAt': createdAt?.toIso8601String(),
+        'updatedAt': updatedAt?.toIso8601String(),
+      };
 }
 
 class Category {

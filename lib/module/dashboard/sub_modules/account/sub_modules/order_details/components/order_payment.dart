@@ -161,7 +161,7 @@ class OrderPaymentSummary extends StatelessWidget {
                           TextSpan(
                             children: [
                               TextSpan(
-                                text: 'BDT',
+                                text: 'BDT ',
                                 style: KTextStyle.customTextStyle(
                                   color: KColor.deep2.color,
                                   fontSize: 16,
@@ -251,7 +251,7 @@ class OrderPaymentSummary extends StatelessWidget {
                       TextSpan(
                         children: [
                           TextSpan(
-                            text: 'BDT',
+                            text: 'BDT ',
                             style: KTextStyle.customTextStyle(
                               color: KColor.deep2.color,
                               fontSize: 16,

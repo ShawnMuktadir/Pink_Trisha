@@ -148,6 +148,13 @@ class ProductModel {
           json['product'] != null ? Product.fromJson(json['product']) : null,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'product': product?.toJson(),
+    };
+  }
 }
 
 class FeaturedBrand {

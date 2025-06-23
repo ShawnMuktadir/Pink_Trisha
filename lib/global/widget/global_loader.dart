@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pink_by_trisha_app/global/widget/global_bordered_container.dart';
 import 'package:pink_by_trisha_app/global/widget/global_text.dart';
 import 'package:pink_by_trisha_app/utils/styles/k_colors.dart';
 
 class GlobalLoader extends StatelessWidget {
-  const GlobalLoader({Key? key, this.text = "Loading..."}) : super(key: key);
+  const GlobalLoader({super.key, this.text = "Loading..."});
+
   final String text;
 
   @override
@@ -27,14 +27,15 @@ class GlobalLoader extends StatelessWidget {
 
 class GlobalTopLoader extends StatelessWidget {
   const GlobalTopLoader(
-      {Key? key,
+      {super.key,
       this.text = "Loading...",
       this.isLoading = false,
-      required this.child})
-      : super(key: key);
+      required this.child});
+
   final String text;
   final bool isLoading;
   final Widget child;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -56,22 +57,3 @@ class GlobalTopLoader extends StatelessWidget {
     );
   }
 }
-
-// class GlobalLoader extends StatelessWidget {
-//   const GlobalLoader({Key? key, this.text = "Loading..."}) : super(key: key);
-//   final String? text;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Row(
-//       mainAxisSize: MainAxisSize.min,
-//       children: [
-//       const  CircularProgressIndicator.adaptive(),
-//         SizedBox(width: 10.w),
-//         Text(text ?? "")
-//       ],
-//     );
-//   }
-// }
-
- 

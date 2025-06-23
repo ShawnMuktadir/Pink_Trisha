@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,20 +13,14 @@ import 'package:pink_by_trisha_app/utils/styles/k_assets.dart';
 import 'package:pink_by_trisha_app/utils/styles/k_colors.dart';
 
 class HomeBestDeals extends ConsumerWidget {
-  const HomeBestDeals({Key? key}) : super(key: key);
+  const HomeBestDeals({super.key});
 
   @override
   Widget build(BuildContext context, ref) {
     final controller = ref.read(dashboardController.notifier);
     final state = ref.watch(dashboardController);
-    // final homeState = ;
     final bestDealProducts = ref.watch(homeController).bestDealProducts;
-    // .where((element) =>
-    //     element.product?.isFeatured != null && element.product!.isFeatured!)
-    // .toList();
 
-    // List<String> images =
-    //     homeState.featuredCategories.map((e) => e.imageUrl ?? "").toList();
     return Container(
       width: context.width,
       margin: EdgeInsets.only(top: 30.h),
@@ -43,8 +38,7 @@ class HomeBestDeals extends ConsumerWidget {
           SizedBox(
             height: 12.h,
           ),
-          Container(
-            //   color: Colors.yellow,
+          SizedBox(
             height: ((bestDealProducts.length > 2 ? 232.h : 120.h) * 2.7),
             child: bestDealProducts.isNotEmpty
                 ? PageView.builder(
@@ -57,10 +51,6 @@ class HomeBestDeals extends ConsumerWidget {
                       Widget buildProductCard(int cardIndex) {
                         final product =
                             bestDealProducts[startIndex + cardIndex].product;
-                        // final imageUrl = product?.imageUrl ??
-                        //     (product?.productImages?.isNotEmpty == true
-                        //         ? product!.productImages!.first.src
-                        //         : null);
 
                         return GlobalProductCard(
                           imageUrl: product?.imageUrl,

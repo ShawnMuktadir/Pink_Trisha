@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pink_by_trisha_app/constant/app_url.dart';
@@ -395,10 +396,21 @@ class HomeController extends StateNotifier<HomeState> {
           bestDealProducts: data?.bestDealProducts ?? [],
           featuredBrands: data?.featuredBrands ?? [],
         );
+
+        if (kDebugMode) {
+          final bestDeals = data?.bestDealProducts ?? [];
+
+          debugPrint(
+            'bestDealProducts:\n${jsonEncode(bestDeals.map((e) => e.toJson()).toList())}',
+            wrapWidth: 1024,
+          );
+        }
       },
     )
         .catchError((e) {
-      print("Error in Home API: $e");
+      if (kDebugMode) {
+        print("Error in Home API: $e");
+      }
     });
 
     final fpUrl = AppUrl.featureProduct.url

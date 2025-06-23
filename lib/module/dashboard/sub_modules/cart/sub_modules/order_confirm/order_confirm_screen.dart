@@ -12,9 +12,22 @@ import '../../../../../../utils/styles/k_assets.dart';
 import '../../../../../../utils/styles/k_colors.dart';
 import 'components/track_order_button.dart';
 
-class OrderConfirmScreen extends StatelessWidget {
+class OrderConfirmScreen extends StatefulWidget {
   const OrderConfirmScreen({super.key, required this.orderId});
   final String orderId;
+
+  @override
+  State<OrderConfirmScreen> createState() => _OrderConfirmScreenState();
+}
+
+class _OrderConfirmScreenState extends State<OrderConfirmScreen> {
+  
+  @override
+  void initState() {
+    super.initState();
+    print("orderId for tracking ${widget.orderId}");
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,7 +97,7 @@ class OrderConfirmScreen extends StatelessWidget {
                           onTap: () {
                             Navigation.pushReplacement(context,
                                 appRoutes: AppRoutes.orderDetails,
-                                arguments: orderId);
+                                arguments: widget.orderId.toString());
                           },
                           child: const TrackOrderButton()),
                       VerticalSpace(

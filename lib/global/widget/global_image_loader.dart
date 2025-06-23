@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/enum.dart';
@@ -21,7 +22,9 @@ class GlobalImageLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (imageFor == ImageFor.network) {
-      print("Loading image from: $imagePath");
+      if (kDebugMode) {
+        print("Loading image from: $imagePath");
+      }
       return Image.network(
         imagePath,
         height: height,

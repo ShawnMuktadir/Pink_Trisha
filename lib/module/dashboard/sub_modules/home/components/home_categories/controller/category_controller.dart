@@ -32,7 +32,6 @@ class CategoryController extends StateNotifier<CategoryState> {
             onSuccessFunction: (response) {
               final CategoryResponse seeAllModel =
                   CategoryResponse.fromJson(response.data);
-              // print(object)
               state = state.copyWith(cateAllData: seeAllModel.data ?? []);
               print(seeAllModel.toJson());
             })

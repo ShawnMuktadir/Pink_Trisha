@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sslcommerz/model/SSLCSdkType.dart';
@@ -31,7 +32,8 @@ final List<PaymentType> paymentTypes = [
   //PaymentType(title: 'Cash on Delivery', name: 'COD', index: 1),
 ];
 
-class CartController extends StateNotifier<CartState> {
+class CartController extends StateNotifier<CartState>
+    with WidgetsBindingObserver {
   CartController()
       : super(CartState(
           isLoading: false,
@@ -57,7 +59,27 @@ class CartController extends StateNotifier<CartState> {
             PaymentType(title: "Cash on Delivery", name: "COD", index: 1),
           ],
         )) {
-    print("Initial Payment Type: ${state.paymentType.name}"); // Debugging
+    if (kDebugMode) {
+      print("Initial Payment Type: ${state.paymentType.name}");
+    }
+    // Register lifecycle observer
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState appState) {
+    if (appState == AppLifecycleState.resumed && state.isSSLLoading) {
+      if (kDebugMode) {
+        print("App resumed. Resetting isSSLLoading.");
+      }
+      state = state.copyWith(isSSLLoading: false);
+    }
   }
 
   static const _key = 'selectedCartProducts';
@@ -104,11 +126,18 @@ class CartController extends StateNotifier<CartState> {
 
     try {
       debugPrint("Launching SSLCommerz payment...");
-      var response = await sslcommerz.payNow();
+      //var response = await sslcommerz.payNow();
+
+      var response = await sslcommerz.payNow().whenComplete(() {
+        // Always reset loading state regardless of what happens
+        state = state.copyWith(isSSLLoading: false);
+      });
+
       debugPrint("Received response: $response");
 
       if (response == null) {
-        debugPrint("Null response received. Payment might have failed silently.");
+        debugPrint(
+            "Null response received. Payment might have failed silently.");
         Fluttertoast.showToast(
           msg: "Payment could not be started. Please try again.",
           backgroundColor: Colors.orange,
@@ -131,7 +160,7 @@ class CartController extends StateNotifier<CartState> {
           backgroundColor: Colors.red,
           textColor: Colors.white,
         );
-        state = state.copyWith(isSSLLoading: false);
+        //state = state.copyWith(isSSLLoading: false);
         return;
       }
 
@@ -182,7 +211,8 @@ class CartController extends StateNotifier<CartState> {
         context: mContext,
         builder: (context) => AlertDialog(
           title: Text("Payment Error"),
-          content: Text("Something went wrong while initiating the payment. Please check your internet or try again."),
+          content: Text(
+              "Something went wrong while initiating the payment. Please check your internet or try again."),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -193,8 +223,8 @@ class CartController extends StateNotifier<CartState> {
       );
     }
 
-    state = state.copyWith(isSSLLoading: false);
-
+    //state = state.copyWith(isSSLLoading: false);
+    // Navigation and cart clearing if payment was successful
     if (paymentWasSuccessful) {
       debugPrint("Navigating to Order Confirmation...");
       Future(() {
@@ -242,7 +272,9 @@ class CartController extends StateNotifier<CartState> {
             }
           });
     } catch (e, s) {
-      print("error is : $e");
+      if (kDebugMode) {
+        print("error is : $e");
+      }
     }
   }
 
@@ -269,7 +301,9 @@ class CartController extends StateNotifier<CartState> {
           });
       //  }
     } catch (e, s) {
-      print("error is : $e");
+      if (kDebugMode) {
+        print("error is : $e");
+      }
     }
   }
 
@@ -289,10 +323,14 @@ class CartController extends StateNotifier<CartState> {
 
   Future<void> reqCreateOrder(BuildContext context) async {
     try {
-      print("==== Starting reqCreateOrder ====");
+      if (kDebugMode) {
+        print("==== Starting reqCreateOrder ====");
+      }
 
       state = state.copyWith(isOrderCreateBtnLoading: true);
-      print("isOrderCreateBtnLoading set to true");
+      if (kDebugMode) {
+        print("isOrderCreateBtnLoading set to true");
+      }
 
       List<OrderCreateItem> orderItems = [];
 
@@ -323,12 +361,16 @@ class CartController extends StateNotifier<CartState> {
         ));
       }
 
-      print(
-          "\nAll cart products processed. Total order items: ${orderItems.length}");
+      if (kDebugMode) {
+        print(
+            "\nAll cart products processed. Total order items: ${orderItems.length}");
+      }
 
       // Fix: Use the selected payment type from state instead of recalculating
       String finalPaymentType = state.paymentType.name ?? "COD";
-      print("Final payment type selected: $finalPaymentType");
+      if (kDebugMode) {
+        print("Final payment type selected: $finalPaymentType");
+      }
 
       OrderCreateData orderData = OrderCreateData(
         customerAddress: state.shippingAddress?.address ?? "",
@@ -360,8 +402,10 @@ class CartController extends StateNotifier<CartState> {
         customerEmail: PrefHelper.getString(AppConstant.EMAIL.key),
       );
 
-      print("\nOrder data prepared:");
-      print(orderData.toMap());
+      if (kDebugMode) {
+        print(orderData.toMap());
+        print("\nOrder data prepared:");
+      }
 
       await _apiClient.request(
         url: AppUrl.orderCreate.url,
@@ -369,20 +413,35 @@ class CartController extends StateNotifier<CartState> {
         data: orderData.toMap(),
         token: PrefHelper.getString(AppConstant.TOKEN.key),
         onSuccessFunction: (response) {
-          print("\nOrder creation response received:");
-          print(jsonEncode(response.data));
+          if (kDebugMode) {
+            print("\nOrder creation response received:");
+            print(jsonEncode(response.data));
+          }
 
           if (finalPaymentType == "COD") {
-            print("Payment type is Cash on Delivery (COD).");
-            ViewUtil.SSLSnackbar("Order created successfully!");
-            Navigation.popUntil(context, 3);
-            Navigation.push(context,
-                appRoutes: AppRoutes.orderConfirm,
-                arguments: response.data["data"]["id"].toString());
-            clearAllFromCart();
+            if (kDebugMode) {
+              print("Payment type is Cash on Delivery (COD).");
+            }
+            print("Response data: ${jsonEncode(response.data)}");
+            print("Response Extracted orderId: ${response.data["data"]["orderId"]}");
+            final rawOrderId = response.data["data"]["orderId"];
+            if (rawOrderId != null) {
+              ViewUtil.SSLSnackbar("Order created successfully!");
+              Navigation.popUntil(context, 3);
+              Navigation.push(context,
+                  appRoutes: AppRoutes.orderConfirm,
+                  arguments: rawOrderId.toString());
+              clearAllFromCart();
+            } else {
+              ViewUtil.SSLSnackbar(
+                  "Order creation failed: No order ID returned.");
+              if (kDebugMode) print("Order ID was null!");
+            }
           } else {
-            print(
-                "Payment type is Online (DVP), proceeding with SSLCommerz payment.");
+            if (kDebugMode) {
+              print(
+                  "Payment type is Online (DVP), proceeding with SSLCommerz payment.");
+            }
             int? orderId = response.data["data"]["orderId"];
             if (orderId != null) {
               sslCommerzCall(orderId: orderId, mContext: context);
@@ -393,18 +452,24 @@ class CartController extends StateNotifier<CartState> {
         },
       );
     } catch (e, s) {
-      print("\n Error occurred during order creation:");
-      print("Error: $e");
-      print("StackTrace: $s");
+      if (kDebugMode) {
+        print("\n Error occurred during order creation:");
+        print("Error: $e");
+        print("StackTrace: $s");
+      }
     }
 
     state = state.copyWith(isOrderCreateBtnLoading: false);
-    print("isOrderCreateBtnLoading set to false");
-    print("==== reqCreateOrder finished ====");
+    if (kDebugMode) {
+      print("isOrderCreateBtnLoading set to false");
+      print("==== reqCreateOrder finished ====");
+    }
   }
 
   void incrementQuantity(String slug) {
-    print("incrementQuantity");
+    if (kDebugMode) {
+      print("incrementQuantity");
+    }
     final productIndex =
         state.cartProducts.indexWhere((element) => element.slug == slug);
     if (productIndex != -1 && state.cartProducts[productIndex].quantity < 20) {
@@ -417,7 +482,9 @@ class CartController extends StateNotifier<CartState> {
   }
 
   void decrementQuantity(String slug) {
-    print("decrementQuantity");
+    if (kDebugMode) {
+      print("decrementQuantity");
+    }
     final productIndex =
         state.cartProducts.indexWhere((element) => element.slug == slug);
     if (productIndex != -1 && state.cartProducts[productIndex].quantity == 1) {
@@ -558,25 +625,35 @@ class CartController extends StateNotifier<CartState> {
           ? product.offerPrice.toString()
           : product.price.toString());
 
-      print("Product: ${product.name} | Offer Price: ${product.offerPrice} "
-          "| Final Price Used: $offerPrice");
+      if (kDebugMode) {
+        print("Product: ${product.name} | Offer Price: ${product.offerPrice} "
+            "| Final Price Used: $offerPrice");
+      }
 
       // Apply DVP logic while keeping the original logic intact
       if (product.paymentType == "DVP") {
         subtotal += (offerPrice / 2) * product.quantity; // Half price for DVP
-        print("DVP Product Applied | Adjusted Price: ${(offerPrice / 2)}");
+        if (kDebugMode) {
+          print("DVP Product Applied | Adjusted Price: ${(offerPrice / 2)}");
+        }
       } else {
         subtotal += offerPrice * product.quantity; // Full price for non-DVP
-        print("Regular Product Applied | Price: $offerPrice");
+        if (kDebugMode) {
+          print("Regular Product Applied | Price: $offerPrice");
+        }
       }
     }
-    print("calc 7 | Final Subtotal: $subtotal");
+    if (kDebugMode) {
+      print("calc 7 | Final Subtotal: $subtotal");
+    }
     return subtotal;
   }
 
   Future<void> toggleCartButton(CartProduct cartProduct) async {
-    print(
-        "toggleCartButton ${cartProduct.currentAttributeValueId.length}  ${cartProduct.currentAttributeValueId} ");
+    if (kDebugMode) {
+      print(
+          "toggleCartButton ${cartProduct.currentAttributeValueId.length}  ${cartProduct.currentAttributeValueId} ");
+    }
     state = state.copyWith(isCartBtnLoading: true);
     try {
       List<CartProduct> updatedCartProducts = List.from(state.cartProducts);
@@ -590,7 +667,9 @@ class CartController extends StateNotifier<CartState> {
       }
       await updateCartProducts(updatedCartProducts);
     } on Exception catch (e) {
-      print("Error is: $e");
+      if (kDebugMode) {
+        print("Error is: $e");
+      }
     }
     state = state.copyWith(isCartBtnLoading: false);
   }
@@ -610,7 +689,9 @@ class CartController extends StateNotifier<CartState> {
   }
 
   void setPaymentTypeIndex(PaymentType paymentType) {
-    print("Updating payment type to: ${paymentType.name}"); // Debugging
+    if (kDebugMode) {
+      print("Updating payment type to: ${paymentType.name}");
+    } // Debugging
     state = state.copyWith(
         paymentType: paymentType); // Properly update payment type
   }

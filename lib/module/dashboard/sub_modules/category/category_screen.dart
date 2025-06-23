@@ -35,7 +35,9 @@ class CategoryScreen extends StatelessWidget {
               SizedBox(
                 height: 20,
               ),
-              CategoryListSection(),
+              const Expanded(
+                child: CategoryListSection(),
+              ),
             ],
           ),
         ),

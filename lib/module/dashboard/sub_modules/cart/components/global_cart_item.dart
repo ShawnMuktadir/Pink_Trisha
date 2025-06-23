@@ -45,6 +45,11 @@ class GlobalCartItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = context.read(cartController.notifier);
+    String? imageUrl;
+    if (imgPath.isNotEmpty) {
+      imageUrl = imgPath; // Accessing the imageUrl property from ProductImage
+    }
+
     return Dismissible(
       key: UniqueKey(),
       direction: DismissDirection.endToStart,
@@ -88,8 +93,9 @@ class GlobalCartItem extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16),
                   child: GlobalImageLoader(
-                    imageFor:
-                        imgPath.isEmpty ? ImageFor.asset : ImageFor.network,
+                    imageFor: imageUrl == null || imageUrl.isEmpty
+                        ? ImageFor.asset
+                        : ImageFor.network,
                     imagePath: imgPath.isEmpty
                         ? KAssetName.icEmptyImage2png.imagePath
                         : imgPath,
