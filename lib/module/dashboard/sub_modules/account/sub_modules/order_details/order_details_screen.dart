@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pink_by_trisha_app/global/widget/global_back_button.dart';
@@ -15,6 +16,7 @@ import 'package:pink_by_trisha_app/utils/extension.dart';
 
 class OrderDetailsScreen extends StatefulWidget {
   const OrderDetailsScreen({super.key, required this.orderId});
+
   final String orderId;
 
   @override
@@ -38,9 +40,11 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         final controller = ref.read(myOrderController.notifier);
         final state = ref.watch(myOrderController);
 
-        print("OrderDetailsScreen build started");
-        print("isOrderDetailsLoading: ${state.isOrderDetailsLoading}");
-        print("orderDetailsResponse: ${state.orderDetailsResponse}");
+        if (kDebugMode) {
+          print("OrderDetailsScreen build started");
+          print("isOrderDetailsLoading: ${state.isOrderDetailsLoading}");
+          print("orderDetailsResponse: ${state.orderDetailsResponse}");
+        }
 
         return GlobalBackground(
           child: Column(
@@ -59,18 +63,15 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                           child: SingleChildScrollView(
                             child: Center(
                               child: Builder(builder: (context) {
-                                print("Building order details...");
+                                if (kDebugMode) {
+                                  print("Building order details...");
+                                }
 
                                 final data = state.orderDetailsResponse!.data!;
-                                print("data: $data");
-
                                 final hasItem = data.orderItems != null &&
                                     data.orderItems!.isNotEmpty;
-                                print("hasItem: $hasItem");
-
                                 final firstItem =
                                     hasItem ? data.orderItems?.first : null;
-                                print("firstItem: $firstItem");
 
                                 return Column(
                                   children: [
@@ -85,8 +86,10 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                             cartProducts: [
                                               ...data.orderItems!.map(
                                                 (e) {
-                                                  print(
-                                                      "Processing order item: ${e.product?.name}");
+                                                  if (kDebugMode) {
+                                                    print(
+                                                        "Processing order item: ${e.product?.name}");
+                                                  }
                                                   return CartProduct(
                                                     id: e.product?.id
                                                             ?.toString() ??
@@ -105,7 +108,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                                             .first
                                                             .src
                                                         : null,
-                                                    price: null,
+                                                    price: e.product?.price,
                                                     offerPrice: null,
                                                     productImage: null,
                                                     isPreorder: true,
@@ -154,8 +157,6 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                         : const SizedBox.shrink(),
                                     OrderPaymentSummary(
                                       subtotal:
-
-
                                           data.subTotal?.toString() ?? "0",
                                       total: data.subTotal?.toString() ?? "0",
                                       shippingCharge: "0",

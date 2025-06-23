@@ -160,7 +160,7 @@ class CartController extends StateNotifier<CartState>
           backgroundColor: Colors.red,
           textColor: Colors.white,
         );
-        //state = state.copyWith(isSSLLoading: false);
+        state = state.copyWith(isSSLLoading: false);
         return;
       }
 
@@ -223,7 +223,7 @@ class CartController extends StateNotifier<CartState>
       );
     }
 
-    //state = state.copyWith(isSSLLoading: false);
+    state = state.copyWith(isSSLLoading: false);
     // Navigation and cart clearing if payment was successful
     if (paymentWasSuccessful) {
       debugPrint("Navigating to Order Confirmation...");
@@ -258,9 +258,10 @@ class CartController extends StateNotifier<CartState>
       await _apiClient.request(
           url: url,
           method: MethodType.POST,
-          // token: PrefHelper.getString(AppConstant.TOKEN.key),
           onSuccessFunction: (response) {
-            print('Response: ${jsonEncode(response.data)}');
+            if (kDebugMode) {
+              print('Response: ${jsonEncode(response.data)}');
+            }
             if (response.statusCode == 200) {
               ViewUtil.toast(
                 msg: "Transaction Successfully done.",

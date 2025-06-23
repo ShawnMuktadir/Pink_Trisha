@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:pink_by_trisha_app/global/widget/global_back_button.dart';
 import 'package:pink_by_trisha_app/global/widget/global_background.dart';
 import 'package:pink_by_trisha_app/module/dashboard/sub_modules/account/sub_modules/my_order/components/order_card.dart';
 import 'package:pink_by_trisha_app/module/dashboard/sub_modules/account/sub_modules/my_order/controller/my_order_controller.dart';
 import 'package:pink_by_trisha_app/utils/extension.dart';
+
+import 'model/my_order_model.dart';
 
 class MyOrderScreen extends StatefulWidget {
   const MyOrderScreen({
@@ -56,11 +59,7 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
                                   top: 10, right: 24, left: 24),
                               child: Column(
                                 children:
-                                    state.orderList.asMap().entries.map((item) {
-                                  return OrderCard(
-                                    orderData: item.value,
-                                  );
-                                }).toList(),
+                                    _buildSortedOrderWidgets(state.orderList),
                               ),
                             ),
                           ),
@@ -74,5 +73,16 @@ class _MyOrderScreenState extends State<MyOrderScreen> {
         ),
       );
     });
+  }
+
+  List<Widget> _buildSortedOrderWidgets(List<MyOrderData> orders) {
+    // Sort and map to widgets
+    final sortedOrders = [...orders]..sort((a, b) {
+        final dateA = DateTime.tryParse(a.createdAt ?? '') ?? DateTime(2000);
+        final dateB = DateTime.tryParse(b.createdAt ?? '') ?? DateTime(2000);
+        return dateB.compareTo(dateA); // newest first
+      });
+
+    return sortedOrders.map((order) => OrderCard(orderData: order)).toList();
   }
 }
