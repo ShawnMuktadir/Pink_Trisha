@@ -1,3 +1,5 @@
+import '../../../../../../../utils/math_util.dart';
+
 class ProductListResponse {
   int? statusCode;
   String? message;
@@ -22,8 +24,8 @@ class ProductListResponse {
 class Product {
   int id;
   String name;
-  dynamic price;
-  dynamic offerPrice;
+  double? price;
+  double? offerPrice;
   int? categoryId;
   String? nameBn;
   String? shortDescription;
@@ -69,10 +71,10 @@ class Product {
       nameBn: json['nameBn'],
       shortDescription: json['shortDescription'],
       imageUrl: json['imageUrl'],
-      price: json['price']?.toDouble(),
-      offerPrice: json['offerPrice']?.toDouble(),
-      priceInUSD: json['priceInUSD']?.toDouble(),
-      offerPriceInUSD: json['offerPriceInUSD']?.toDouble(),
+      price: parseToDouble(json['price']),
+      offerPrice:  parseToDouble(json['offerPrice']),
+      priceInUSD:  parseToDouble(json['priceInUSD']),
+      offerPriceInUSD:  parseToDouble(json['offerPriceInUSD']),
       slug: json['slug'],
       baseAttributeId: json['baseAttributeId'],
       points: json['points'],

@@ -104,7 +104,7 @@ class ProductDetailsController extends StateNotifier<ProductDetailsState> {
     // Update the state with the modified list
     state = state.copyWith(
         currentAttributeValueId: updatedList,
-        selectedproductVariants: selectedproductVariants);
+        selectedProductVariants: selectedproductVariants);
   }
 
   // late List<Widget>  pages = [

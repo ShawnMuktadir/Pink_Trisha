@@ -15,8 +15,10 @@ import '../../../../../../../../utils/navigation.dart';
 class RelatedProducts extends StatefulWidget {
   const RelatedProducts(
       {super.key, required this.categoryId, required this.id});
+
   final int categoryId;
   final int id;
+
   @override
   State<RelatedProducts> createState() => _RelatedProductsState();
 }
@@ -50,10 +52,10 @@ class _RelatedProductsState extends State<RelatedProducts> {
                         const EdgeInsets.only(left: 10, top: 30, right: 20),
                     child: Column(
                       children: [
-                        RelatedPorductsLabel(
+                        RelatedProductsLabel(
                           categoryId: widget.categoryId,
                         ),
-                        RelatedPorductsImages(
+                        RelatedProductsImages(
                             relatedProducts: state.relatedProducts)
                       ],
                     ),
@@ -63,9 +65,11 @@ class _RelatedProductsState extends State<RelatedProducts> {
   }
 }
 
-class RelatedPorductsImages extends StatelessWidget {
-  const RelatedPorductsImages({super.key, required this.relatedProducts});
+class RelatedProductsImages extends StatelessWidget {
+  const RelatedProductsImages({super.key, required this.relatedProducts});
+
   final List<Product> relatedProducts;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -93,8 +97,8 @@ class RelatedPorductsImages extends StatelessWidget {
                       id: product.id,
                       title: product.name ?? "",
                       subTitle: product.shortDescription ?? "",
-                      price: product.price,
-                      offerPrice: product.offerPrice,
+                      price: product.price!,
+                      offerPrice: product.offerPrice!,
                       slug: product.slug ?? "",
                       productImages: product.productImages,
                       loaderScreenType: LoaderScreenType.home,
@@ -118,9 +122,10 @@ class RelatedPorductsImages extends StatelessWidget {
   }
 }
 
-class RelatedPorductsLabel extends StatelessWidget {
+class RelatedProductsLabel extends StatelessWidget {
   final int categoryId;
-  const RelatedPorductsLabel({super.key, required this.categoryId});
+
+  const RelatedProductsLabel({super.key, required this.categoryId});
 
   @override
   Widget build(BuildContext context) {
@@ -136,8 +141,6 @@ class RelatedPorductsLabel extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
-            // Navigator.push(context, MaterialPageRoute(
-            //     builder: (context)=> RelatedProductSeeAll(categoryId: categoryId,)));
             Navigation.push(context,
                 appRoutes: AppRoutes.product,
                 arguments: ScreenSourceData(sourceType: SourceType.all));

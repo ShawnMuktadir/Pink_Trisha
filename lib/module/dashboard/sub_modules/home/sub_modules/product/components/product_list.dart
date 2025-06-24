@@ -62,9 +62,9 @@ class ProductList extends StatelessWidget {
                                     subTitle: state.products[productIndex]
                                             .shortDescription ??
                                         "",
-                                    price: state.products[productIndex].price,
+                                    price: state.products[productIndex].price!,
                                     offerPrice:
-                                        state.products[productIndex].offerPrice,
+                                        state.products[productIndex].offerPrice!,
                                     slug:
                                         state.products[productIndex].slug ?? "",
                                     id: state.products[productIndex].id!,

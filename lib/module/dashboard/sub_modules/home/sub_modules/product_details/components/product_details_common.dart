@@ -10,7 +10,9 @@ import 'package:pink_by_trisha_app/module/dashboard/sub_modules/home/sub_modules
 import 'package:pink_by_trisha_app/utils/styles/k_assets.dart';
 import 'package:pink_by_trisha_app/utils/styles/k_colors.dart';
 
-class ProductDetailsCommon extends StatelessWidget {
+import '../../../../../../../utils/math_util.dart';
+
+class ProductDetailsCommon extends StatefulWidget {
   const ProductDetailsCommon({
     super.key,
     required this.title,
@@ -25,19 +27,28 @@ class ProductDetailsCommon extends StatelessWidget {
   final int id;
   final int stackQty;
   final String title;
-  final dynamic offerPrice;
-  final dynamic price;
+  final double offerPrice;
+  final double price;
   final dynamic points;
   final List<ProductDetailsVariant> productVariants;
 
-  // final List<ProductVariant> colors;
-  // final List<ProductVariant> shades;
+  @override
+  State<ProductDetailsCommon> createState() => _ProductDetailsCommonState();
+}
+
+class _ProductDetailsCommonState extends State<ProductDetailsCommon> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer(
       builder: (_, WidgetRef ref, __) {
-        final controller = ref.read(productDetailsController(id).notifier);
-        final state = ref.watch(productDetailsController(id));
+        final controller =
+            ref.read(productDetailsController(widget.id).notifier);
+        final state = ref.watch(productDetailsController(widget.id));
         return Padding(
           padding: const EdgeInsets.only(left: 24, right: 24, top: 24),
           child: Column(
@@ -46,7 +57,7 @@ class ProductDetailsCommon extends StatelessWidget {
               SizedBox(
                 width: 266,
                 child: GlobalText(
-                  str: title,
+                  str: widget.title,
                   color: KColor.deep2.color,
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
@@ -57,7 +68,7 @@ class ProductDetailsCommon extends StatelessWidget {
                 height: 16.h,
               ),
               GlobalText(
-                str: 'In stock ($stackQty)',
+                str: 'In stock (${widget.stackQty})',
                 color: KColor.blue.color,
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
@@ -70,7 +81,8 @@ class ProductDetailsCommon extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   GlobalText(
-                    str: 'BDT ${price != 0 ? price : offerPrice}',
+                    str:
+                        'BDT ${!isZero(widget.price) ? widget.price : widget.offerPrice}',
                     color: KColor.deepPrimary.color,
                     fontSize: 24,
                     fontWeight: FontWeight.w600,
@@ -79,9 +91,9 @@ class ProductDetailsCommon extends StatelessWidget {
                   HorizontalSpace(
                     width: 10.w,
                   ),
-                  if (price != 0)
+                  if (!isZero(widget.price))
                     GlobalText(
-                      str: 'BDT $offerPrice ',
+                      str: 'BDT ${widget.offerPrice} ',
                       color: KColor.grey2.color,
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
@@ -97,10 +109,10 @@ class ProductDetailsCommon extends StatelessWidget {
                 height: 16.h,
               ),
               GlobalText(
-                str: points != null
-                    ? 'Points: $points ${points == 1 ? "point" : "points"}'
+                str: widget.points != null
+                    ? 'Points: ${widget.points} ${widget.points == 1 ? "point" : "points"}'
                     : 'No points',
-                color: (points == null || points == 0)
+                color: (widget.points == null || widget.points == 0)
                     ? KColor.red.color
                     : KColor.deepGrey.color,
                 fontSize: 20,
@@ -111,11 +123,11 @@ class ProductDetailsCommon extends StatelessWidget {
                 height: 17.h,
               ),
               ProductVariantSection(
-                id: id,
+                id: widget.id,
               ),
               ProductQuantitySection(
                 maxQuantity: 20,
-                id: id,
+                id: widget.id,
               ),
             ],
           ),
@@ -186,7 +198,6 @@ class _ProductQuantitySectionState extends State<ProductQuantitySection> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Material(
-                        //    color: Colors.yellow,
                         color: Colors.white,
                         child: InkWell(
                           onTap: controller.decrementQuantity,

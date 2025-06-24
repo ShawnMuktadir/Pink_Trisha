@@ -1,6 +1,9 @@
 import 'package:pink_by_trisha_app/module/dashboard/sub_modules/cart/model/payment_type.dart';
 import 'package:pink_by_trisha_app/module/dashboard/sub_modules/home/sub_modules/product_details/controller/product_details_state.dart';
 
+import '../../../../../utils/math_util.dart';
+import '../../home/sub_modules/product/model/product_list_response.dart';
+
 final List<PaymentType> paymentTypes = [
   PaymentType(
       title: 'bKash',
@@ -27,8 +30,8 @@ final List<PaymentType> paymentTypes = [
 class CartProduct {
   final String id;
   final String name;
-  final dynamic price;
-  final dynamic offerPrice;
+  final double? price;
+  final double? offerPrice;
   final int? categoryId;
   final int? brandId;
   final String? nameBn;
@@ -43,6 +46,7 @@ class CartProduct {
   final List<SelectedAttributeModel> currentAttributeValueId;
   final List<String>? attributes;
   final List<String>? variants;
+
   CartProduct({
     this.attributes,
     this.variants,
@@ -60,7 +64,7 @@ class CartProduct {
     required this.imageUrl,
     required this.price,
     required this.offerPrice,
-    required this.productImage,
+    this.productImage,
     required this.quantity,
   });
 
@@ -82,23 +86,36 @@ class CartProduct {
       'paymentType': paymentType,
       'vendorId': vendorId,
       'variantSelected':
-          currentAttributeValueId.map((variant) => variant.toJson()).toList(),
+      currentAttributeValueId.map((variant) => variant.toJson()).toList(),
     };
   }
 
   factory CartProduct.fromJson(Map<String, dynamic> json) {
+    String? imageUrl = json['imageUrl'];
+    String? productImage = json['productImage'];
+
+    if ((imageUrl == null || imageUrl.isEmpty) &&
+        json['productImages'] is List &&
+        (json['productImages'] as List).isNotEmpty) {
+      final firstImage = json['productImages'][0];
+      if (firstImage is Map && firstImage['src'] != null) {
+        productImage = firstImage['src'];
+        print("productImage fromJson $productImage");
+      }
+    }
+
     return CartProduct(
-      id: json['id'],
+      id: json['id'].toString(),
       name: json['name'],
       nameBn: json['nameBn'],
       slug: json['slug'],
       shortDescription: json['shortDescription'],
-      imageUrl: json['imageUrl'],
-      price: json['price'],
-      offerPrice: json['offerPrice'],
+      imageUrl: imageUrl,
+      price: parseToDouble(json['price']),
+      offerPrice: parseToDouble(json['offerPrice']),
       productImage: json['productImage'],
       quantity: json['quantity'],
-      isPreorder: json['isPreorder'],
+      isPreorder: json['isPreorder'] ?? false,
       brandId: json['brandId'],
       categoryId: json['categoryId'],
       paymentType: json['paymentType'],
@@ -116,8 +133,8 @@ class CartProduct {
     String? slug,
     String? shortDescription,
     String? imageUrl,
-    dynamic price,
-    dynamic offerPrice,
+    double? price,
+    double? offerPrice,
     String? productImage,
     int? quantity,
     bool? isPreorder,

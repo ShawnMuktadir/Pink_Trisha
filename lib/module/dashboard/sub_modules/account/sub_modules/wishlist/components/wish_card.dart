@@ -11,6 +11,7 @@ import 'package:pink_by_trisha_app/module/dashboard/sub_modules/cart/model/cart_
 import 'package:pink_by_trisha_app/module/dashboard/sub_modules/home/sub_modules/product_details/product_details_screen.dart';
 import 'package:pink_by_trisha_app/utils/app_routes.dart';
 import 'package:pink_by_trisha_app/utils/enum.dart';
+import 'package:pink_by_trisha_app/utils/math_util.dart';
 import 'package:pink_by_trisha_app/utils/navigation.dart';
 import 'package:pink_by_trisha_app/utils/styles/k_assets.dart';
 import 'package:pink_by_trisha_app/utils/styles/k_colors.dart';
@@ -138,11 +139,11 @@ class _WishCardState extends State<WishCard> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               if (widget.price != null &&
-                                  widget.price.toString().isNotEmpty &&
-                                  double.tryParse(widget.price.toString()) !=
-                                      0.0) ...[
+                                  widget.offerPrice != null &&
+                                  double.tryParse(widget.price.toString()) != 0.0) ...[
+                                // Show offerPrice as strikethrough (old price)
                                 GlobalText(
-                                  str: 'BDT ${widget.price}',
+                                  str: 'BDT ${widget.offerPrice}',
                                   color: KColor.deepGrey.color,
                                   fontSize: 18,
                                   fontWeight: FontWeight.w400,
@@ -150,18 +151,33 @@ class _WishCardState extends State<WishCard> {
                                   decoration: TextDecoration.lineThrough,
                                 ),
                                 const SizedBox(height: 4),
-                              ],
-                              SizedBox(
-                                width: 160,
-                                child: GlobalText(
-                                  str: 'BDT ${widget.offerPrice}',
-                                  color: KColor.midPrimary.color,
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.w600,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
+
+                                // Show price as main
+                                SizedBox(
+                                  width: 160,
+                                  child: GlobalText(
+                                    str: 'BDT ${widget.price}',
+                                    color: KColor.midPrimary.color,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w600,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                              ),
+                              ] else if (widget.offerPrice != null) ...[
+                                // Only offer price if price == 0
+                                SizedBox(
+                                  width: 160,
+                                  child: GlobalText(
+                                    str: 'BDT ${widget.offerPrice}',
+                                    color: KColor.midPrimary.color,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w600,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ]
                             ],
                           ),
                         ),
@@ -177,8 +193,8 @@ class _WishCardState extends State<WishCard> {
                                 slug: widget.slug,
                                 shortDescription: widget.details,
                                 imageUrl: widget.imagePath,
-                                price: widget.price,
-                                offerPrice: widget.offerPrice,
+                                price: parseToDouble(widget.price),
+                                offerPrice: parseToDouble(widget.offerPrice),
                                 productImage: widget.imagePath,
                                 isPreorder: widget.isPreorder,
                                 quantity: 1,
@@ -210,8 +226,8 @@ class _WishCardState extends State<WishCard> {
                                   imagePath: isCartSelected
                                       ? KAssetName
                                           .icCartButtonSelectedsvg.imagePath
-                                      : KAssetName.icCartButtonUnselectedsvg
-                                          .imagePath),
+                                      : KAssetName
+                                          .icCartButtonUnselectedsvg.imagePath),
                             ),
                           )
                           //  GlobalSvgLoader(

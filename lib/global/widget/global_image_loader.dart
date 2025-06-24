@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -23,28 +24,23 @@ class GlobalImageLoader extends StatelessWidget {
   Widget build(BuildContext context) {
     if (imageFor == ImageFor.network) {
       if (kDebugMode) {
-        print("Loading image from: $imagePath");
+        print("Loading image from network: $imagePath");
       }
-      return Image.network(
-        imagePath,
+      return CachedNetworkImage(
+        imageUrl: imagePath,
         height: height,
         width: width,
         fit: fit,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return SizedBox(
-            height: height,
-            width: width,
-            child: const Center(child: CircularProgressIndicator()),
-          );
-        },
-        errorBuilder: (context, exception, stackTrace) {
-          return SizedBox(
-            height: height,
-            width: width,
-            child: const Center(child: Icon(Icons.broken_image)),
-          );
-        },
+        placeholder: (context, url) => SizedBox(
+          height: height,
+          width: width,
+          child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+        ),
+        errorWidget: (context, url, error) => SizedBox(
+          height: height,
+          width: width,
+          child: const Center(child: Icon(Icons.broken_image)),
+        ),
       );
     } else {
       return Image.asset(

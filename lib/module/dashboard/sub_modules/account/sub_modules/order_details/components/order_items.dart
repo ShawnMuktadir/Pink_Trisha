@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pink_by_trisha_app/global/widget/global_container.dart';
 import 'package:pink_by_trisha_app/global/widget/global_image_loader.dart';
@@ -8,35 +9,64 @@ import 'package:pink_by_trisha_app/module/dashboard/sub_modules/home/sub_modules
 import 'package:pink_by_trisha_app/utils/enum.dart';
 import 'package:pink_by_trisha_app/utils/styles/styles.dart';
 
-import '../../../../../../../utils/app_routes.dart';
-import '../../../../../../../utils/navigation.dart';
-import '../../../../home/sub_modules/product_details/product_details_screen.dart';
-
-class OrderItemsSection extends StatelessWidget {
+class OrderItemsSection extends StatefulWidget {
   const OrderItemsSection({super.key, required this.cartProducts});
 
   final List<CartProduct> cartProducts;
 
   @override
+  State<OrderItemsSection> createState() => _OrderItemsSectionState();
+}
+
+class _OrderItemsSectionState extends State<OrderItemsSection> {
+  @override
+  void initState() {
+    super.initState();
+    if (kDebugMode) {
+      print(
+          "Loading image from order items: ${widget.cartProducts.first.imageUrl}");
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (kDebugMode) {
+      for (var e in widget.cartProducts) {
+        print("CartProduct imageUrl: ${e.imageUrl}");
+        print("CartProduct productImage: ${e.productImage}");
+      }
+    }
     return Padding(
       padding: const EdgeInsets.only(left: 22, right: 26),
       child: Column(
         children: [
-          ...cartProducts
-              .map((e) => OrderItemCard(
-                productName: e.name ?? "",
-                productImage: e.imageUrl ?? "",
-                productPrice: e.price == 0
-                    ? e.offerPrice.toString()
-                    : e.price.toString(),
-                productQuantity: e.quantity.toString(),
-                currentAttributeValueId: e.currentAttributeValueId,
-                productBorderColor: "",
-                productDetails: e.shortDescription ?? "",
-                attributes: e.attributes,
-                variants: e.variants,
-              ))
+          /*imageUrl: e
+          .product
+          ?.productImages
+          ?.isNotEmpty ==
+      true
+      ? e
+          .product!
+          .productImages!
+          .first
+          .src
+          : null,*/
+
+          ...widget.cartProducts
+              .map((CartProduct e) => OrderItemCard(
+                    productName: e.name,
+                    productImage:
+                        e.imageUrl,
+                    productPrice: e.price == 0.0
+                        ? e.offerPrice.toString()
+                        : e.price.toString(),
+                    productQuantity: e.quantity.toString(),
+                    currentAttributeValueId: e.currentAttributeValueId,
+                    productBorderColor: "",
+                    productDetails: e.shortDescription ?? "",
+                    attributes: e.attributes,
+                    variants: e.variants,
+                  ))
               .toList()
         ],
       ),
@@ -59,7 +89,7 @@ class OrderItemCard extends StatelessWidget {
     super.key,
     required this.productName,
     required this.productDetails,
-    this.productImage,
+    required this.productImage,
     required this.productPrice,
     required this.productQuantity,
     required this.productBorderColor,
@@ -71,7 +101,6 @@ class OrderItemCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlobalContainer(
-        //height: 164,
         padding:
             const EdgeInsets.only(top: 12, left: 12, right: 10, bottom: 16),
         borderCornerRadius: const BorderRadius.only(

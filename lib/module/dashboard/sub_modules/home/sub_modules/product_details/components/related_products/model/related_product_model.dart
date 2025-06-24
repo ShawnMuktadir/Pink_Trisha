@@ -1,3 +1,5 @@
+import '../../../../../../../../../utils/math_util.dart';
+
 class RelatedProductModel {
   int? statusCode;
   String? message;
@@ -34,8 +36,8 @@ class RelatedProductData {
   String? slug;
   String? shortDescription;
   String? imageUrl;
-  int? price;
-  int? offerPrice;
+  double? price;
+  double? offerPrice;
   List<ProductImages>? productImages;
   Category? category;
 
@@ -58,8 +60,8 @@ class RelatedProductData {
     slug = json['slug'];
     shortDescription = json['shortDescription'];
     imageUrl = json['imageUrl'];
-    price = json['price'];
-    offerPrice = json['offerPrice'];
+    price =  parseToDouble(json['price']);
+    offerPrice =  parseToDouble(json['offerPrice']);
     if (json['productImages'] != null) {
       productImages = <ProductImages>[];
       json['productImages'].forEach((v) {

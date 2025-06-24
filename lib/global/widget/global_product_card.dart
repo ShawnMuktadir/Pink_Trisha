@@ -130,7 +130,7 @@ class _GlobalProductCardState extends State<GlobalProductCard> {
                               children: [
                                 StockStatusWidget(
                                   paymentType: widget.paymentType,
-                                  quantity: widget.quantity!,
+                                  quantity: widget.quantity ?? 0,
                                 ),
                                 SizedBox(
                                   height: 2,
@@ -307,7 +307,7 @@ class _GlobalProductCardState extends State<GlobalProductCard> {
                                   imageUrl: imageUrl,
                                   price: widget.price,
                                   offerPrice: widget.offerPrice,
-                                  productImage: '',
+                                  productImage: imageUrl,
                                   isPreorder: widget.isPreorder,
                                   quantity: 1,
                                   brandId: widget.brandId,

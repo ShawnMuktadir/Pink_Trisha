@@ -1,16 +1,18 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:pink_by_trisha_app/module/dashboard/sub_modules/home/sub_modules/product/model/product_list_response.dart';
 import 'package:pink_by_trisha_app/module/dashboard/sub_modules/home/sub_modules/product_details/model/product_details_response.dart';
+import 'package:pink_by_trisha_app/utils/math_util.dart';
 
 class SelectedAttributeModel {
   final int attributeId;
   final String attributeName;
   final int attributeValueId;
-  final dynamic price;
+  final double? price;
   final String attributeValueName;
-  final dynamic offerPrice;
-  final dynamic priceInUSD;
-  final dynamic offerPriceInUSD;
+  final double? offerPrice;
+  final double? priceInUSD;
+  final double? offerPriceInUSD;
   final int? quantity;
   final String? imageUrl;
 
@@ -28,15 +30,21 @@ class SelectedAttributeModel {
   });
 
   factory SelectedAttributeModel.fromJson(Map<String, dynamic> json) {
+    if (kDebugMode) {
+      print('product price Raw offerPrice: ${json['offerPrice']}');
+      print('product price Parsed offerPrice: ${parseToDouble(json['offerPrice'])}');
+    }
+
+
     return SelectedAttributeModel(
       attributeId: json['attributeId'],
       attributeName: json['attributeName'],
       attributeValueId: json['attributeValueId'],
-      price: json['price'],
+      price: parseToDouble(json['price']),
       attributeValueName: json['attributeValueName'],
-      offerPrice: json['offerPrice'],
-      priceInUSD: json['priceInUSD'],
-      offerPriceInUSD: json['offerPriceInUSD'],
+      offerPrice: parseToDouble(json['offerPrice']),
+      priceInUSD: parseToDouble(json['priceInUSD']),
+      offerPriceInUSD: parseToDouble(json['offerPriceInUSD']),
       quantity: json['quantity'],
       imageUrl: json['imageUrl'],
     );
@@ -59,10 +67,10 @@ class SelectedAttributeModel {
 }
 
 class VariantArgument {
-  final dynamic price;
-  final dynamic offerPrice;
-  final dynamic priceInUSD;
-  final dynamic offerPriceInUSD;
+  final double? price;
+  final double? offerPrice;
+  final double? priceInUSD;
+  final double? offerPriceInUSD;
   final int? quantity;
   final String? imageUrl;
 
@@ -73,6 +81,32 @@ class VariantArgument {
       required this.offerPriceInUSD,
       required this.quantity,
       required this.imageUrl});
+
+  factory VariantArgument.fromJson(Map<String, dynamic> json) {
+    if (kDebugMode) {
+      print('VariantArgument.fromJson() → Raw JSON: $json');
+    }
+
+    return VariantArgument(
+      price: parseToDouble(json['price']),
+      offerPrice: parseToDouble(json['offerPrice']),
+      priceInUSD: parseToDouble(json['priceInUSD']),
+      offerPriceInUSD: parseToDouble(json['offerPriceInUSD']),
+      quantity: json['quantity'],
+      imageUrl: json['imageUrl'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'price': price,
+      'offerPrice': offerPrice,
+      'priceInUSD': priceInUSD,
+      'offerPriceInUSD': offerPriceInUSD,
+      'quantity': quantity,
+      'imageUrl': imageUrl,
+    };
+  }
 }
 
 @immutable
@@ -116,7 +150,7 @@ class ProductDetailsState {
   ProductDetailsState copyWith({
     int? currentProductQuantity,
     int? currentCheckoutMethodIndex,
-    List<ProductDetailsVariant>? selectedproductVariants,
+    List<ProductDetailsVariant>? selectedProductVariants,
     ProductDetailsData? productDetailsData,
     List<Product>? relatedProducts,
     bool? isRelatedProductsLoading,
@@ -141,7 +175,7 @@ class ProductDetailsState {
           currentCheckoutMethodIndex ?? this.currentCheckoutMethodIndex,
       productDetailsData: productDetailsData ?? this.productDetailsData,
       selectedProductVariants:
-          selectedproductVariants ?? this.selectedProductVariants,
+          selectedProductVariants ?? this.selectedProductVariants,
       slipScrollController: slipScrollController ?? this.slipScrollController,
       scrollController: scrollController ?? this.scrollController,
       titleScrollController:

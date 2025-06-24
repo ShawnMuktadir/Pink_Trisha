@@ -107,8 +107,15 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                                             .first
                                                             .src
                                                         : null,
-                                                    price: e.product?.price,
-                                                    offerPrice: null,
+                                                    price: (e.product?.price
+                                                                as num?)
+                                                            ?.toDouble() ??
+                                                        0.0,
+                                                    offerPrice:
+                                                        (e.product?.offerPrice
+                                                                    as num?)
+                                                                ?.toDouble() ??
+                                                            0.0,
                                                     productImage: null,
                                                     isPreorder: true,
                                                     quantity: e.quantity ?? 1,

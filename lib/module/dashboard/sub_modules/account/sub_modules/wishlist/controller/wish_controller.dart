@@ -61,7 +61,7 @@ class WishController extends StateNotifier<WishState> {
         "response  error is :: ${response.data["error"]}".log();
         final List<int> wishProductIds = [];
         for (var item in wishlistResponse.data) {
-          wishProductIds.add(item.product.id!);
+          wishProductIds.add(item.product.id);
         }
         state = state.copyWith(
             wishlistResponse: wishlistResponse,

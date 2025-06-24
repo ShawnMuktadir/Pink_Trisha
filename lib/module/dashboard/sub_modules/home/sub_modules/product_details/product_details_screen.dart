@@ -6,6 +6,7 @@ import 'package:pink_by_trisha_app/global/widget/global_loader.dart';
 import 'package:pink_by_trisha_app/global/widget/global_text.dart';
 import 'package:pink_by_trisha_app/module/dashboard/sub_modules/account/sub_modules/wishlist/controller/wish_controller.dart';
 import 'package:pink_by_trisha_app/module/dashboard/sub_modules/cart/model/cart_product.dart';
+import 'package:pink_by_trisha_app/module/dashboard/sub_modules/home/sub_modules/product/model/product_list_response.dart';
 import 'package:pink_by_trisha_app/module/dashboard/sub_modules/home/sub_modules/product_details/components/product_details_cart_button.dart';
 import 'package:pink_by_trisha_app/module/dashboard/sub_modules/home/sub_modules/product_details/components/product_details_common.dart';
 import 'package:pink_by_trisha_app/module/dashboard/sub_modules/home/sub_modules/product_details/components/product_details_image.dart';
@@ -61,7 +62,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         final isWishSelected = wishState.wishProductIds
             .where((element) => productId == element)
             .isNotEmpty;
-        // wishCon.isSelected(state.productDetailsData!.id!);
         print("check wish state of selection is : $isWishSelected ");
         return GlobalBackground(
           child: GlobalTopLoader(
@@ -89,10 +89,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                               ImageSwiper(
                                 id: pid,
                               ),
-                              // ProductDetailsImage(
-                              //     images:
-                              //         state.productDetailsData?.productImages,
-                              //     discount: 20),
                               RoundedWhiteBackground(
                                   child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,9 +145,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                             .productDetailsData!.paymentType,
                                         currentAttributeValueId:
                                             state.currentAttributeValueId,
-                                        isPreorder:
-                                            state.productDetailsData!.paymentType ==
-                                                "DVP",
+                                        isPreorder: state.productDetailsData!.paymentType == "DVP",
                                         nameBn: ''),
                                     isHeartSelected: isWishSelected,
                                   ),

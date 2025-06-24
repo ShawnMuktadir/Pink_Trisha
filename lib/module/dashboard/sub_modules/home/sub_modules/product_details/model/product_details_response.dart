@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:pink_by_trisha_app/module/dashboard/sub_modules/home/model/product_details_response.dart';
+import 'package:pink_by_trisha_app/utils/math_util.dart';
 
 class ProductDetailsResponse {
   final int? statusCode;
@@ -26,8 +28,8 @@ class ProductDetailsData {
   final String? shortDescription;
   final String? longDescription;
   final String? imageUrl;
-  final dynamic price;
-  final dynamic offerPrice;
+  final double? price;
+  final double? offerPrice;
   final String? productReturnPolicy;
   final String? productWarranty;
   final int? estimatedDeliveryDayNumber;
@@ -75,8 +77,8 @@ class ProductDetailsData {
       shortDescription: json['shortDescription'],
       longDescription: json['longDescription'],
       imageUrl: json['imageUrl'],
-      price: json['price'],
-      offerPrice: json['offerPrice'],
+      price: parseToDouble(json['price']),
+      offerPrice: parseToDouble(json['offerPrice']),
       productReturnPolicy: json['productReturnPolicy'],
       productWarranty: json['productWarranty'],
       estimatedDeliveryDayNumber: json['estimatedDeliveryDayNumber'],
@@ -212,8 +214,8 @@ class ProductDetailsVariant {
     return ProductDetailsVariant(
       id: json['id'],
       name: json['name'],
-      price: json['price']?.toDouble(),
-      offerPrice: json['offerPrice']?.toDouble(),
+      price: parseToDouble(json['price']),
+      offerPrice: parseToDouble(json['offerPrice']),
       quantity: json['quantity'],
       productImage: json['productImage'] != null
           ? ProductImageModel.fromJson(json['productImage'])

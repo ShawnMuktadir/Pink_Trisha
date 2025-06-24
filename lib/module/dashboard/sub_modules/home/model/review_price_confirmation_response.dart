@@ -1,3 +1,5 @@
+import '../../../../../utils/math_util.dart';
+
 class ReviewPriceConfirmationResponse {
   int? statusCode;
   String? message;
@@ -20,7 +22,7 @@ class Data {
   String? onDemandCountry;
   String? url;
   String? onDemandProductTypeName;
-  dynamic productPrice;
+  double? productPrice;
   String? productPriceUnit;
   dynamic weight;
   String? weightUnit;
@@ -32,7 +34,7 @@ class Data {
   dynamic itemPrice;
   dynamic shippingFee;
   dynamic pinkByTrishaFee;
-  dynamic totalPrice;
+  double? totalPrice;
   String? orderStatus;
   String? status;
   String? createdAt;
@@ -70,7 +72,7 @@ class Data {
       onDemandCountry: json['onDemandCountry'],
       url: json['url'],
       onDemandProductTypeName: json['onDemandProductTypeName'],
-      productPrice: json['productPrice'],
+      productPrice:  parseToDouble(json['productPrice']),
       productPriceUnit: json['productPriceUnit'],
       weight: json['weight'],
       weightUnit: json['weightUnit'],
@@ -82,7 +84,7 @@ class Data {
       itemPrice: json['itemPrice'],
       shippingFee: json['shippingFee'],
       pinkByTrishaFee: json['pinkByTrishaFee'],
-      totalPrice: json['totalPrice'],
+      totalPrice:  parseToDouble(json['totalPrice']),
       orderStatus: json['orderStatus'],
       status: json['status'],
       createdAt: json['createdAt'],

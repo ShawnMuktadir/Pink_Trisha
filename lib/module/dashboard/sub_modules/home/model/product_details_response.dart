@@ -1,3 +1,5 @@
+import '../../../../../utils/math_util.dart';
+
 class ProductModel {
   int? statusCode;
   String? message;
@@ -20,8 +22,8 @@ class ProductData {
   String? nameBn;
   String? shortDescription;
   String? imageUrl;
-  int? price;
-  int? offerPrice;
+  double? price;
+  double? offerPrice;
   String? productReturnPolicy;
   String? productWarranty;
   String? longDescription;
@@ -58,8 +60,8 @@ class ProductData {
       nameBn: json['nameBn'],
       shortDescription: json['shortDescription'],
       imageUrl: json['imageUrl'],
-      price: json['price'],
-      offerPrice: json['offerPrice'],
+      price:  parseToDouble(json['price']),
+      offerPrice:  parseToDouble(json['offerPrice']),
       productReturnPolicy: json['productReturnPolicy'],
       productWarranty: json['productWarranty'],
       longDescription: json['longDescription'],

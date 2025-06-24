@@ -1,3 +1,5 @@
+import '../../../../../utils/math_util.dart';
+
 class ReviewPriceResponse {
   int? statusCode;
   String? message;
@@ -75,7 +77,7 @@ class Data {
       onDemandCountry: json['onDemandCountry'],
       url: json['url'],
       onDemandProductTypeName: json['onDemandProductTypeName'],
-      productPrice: json['productPrice']?.toDouble(),
+      productPrice:  parseToDouble(json['productPrice']),
       productPriceUnit: json['productPriceUnit'],
       weight: json['weight']?.toDouble(),
       weightUnit: json['weightUnit'],
@@ -87,7 +89,7 @@ class Data {
       itemPrice: json['itemPrice']?.toDouble(),
       shippingFee: json['shippingFee']?.toDouble(),
       pinkByTrishaFee: json['pinkByTrishaFee']?.toDouble(),
-      totalPrice: json['totalPrice']?.toDouble(),
+      totalPrice:  parseToDouble(json['totalPrice']),
       status: json['status'],
       createdAt: json['createdAt'],
       updatedAt: json['updatedAt'],

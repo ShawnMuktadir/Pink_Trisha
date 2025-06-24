@@ -1,3 +1,6 @@
+
+import '../../../../../../../utils/math_util.dart';
+
 class OrderDetailsResponse {
   int? statusCode;
   String? message;
@@ -71,10 +74,10 @@ class OrderDetailsItem {
   int? quantity;
   int? productId;
   String? productName;
-  int? productPrice;
-  int? productOfferPrice;
-  int? productOfferPriceInUSD;
-  int? productPriceInUSD;
+  double? productPrice;
+  double? productOfferPrice;
+  double? productOfferPriceInUSD;
+  double? productPriceInUSD;
   String? paymentType;
   String? productNameBn;
   int? orderId;
@@ -111,10 +114,10 @@ class OrderDetailsItem {
       quantity: json['quantity'],
       productId: json['productId'],
       productName: json['productName'],
-      productPrice: json['productPrice'],
-      productOfferPrice: json['productOfferPrice'],
-      productOfferPriceInUSD: json['productOfferPriceInUSD'],
-      productPriceInUSD: json['productPriceInUSD'],
+      productPrice: parseToDouble(json['productPrice']),
+      productOfferPrice: parseToDouble(json['productOfferPrice']),
+      productOfferPriceInUSD: parseToDouble(json['productOfferPriceInUSD']),
+      productPriceInUSD: parseToDouble(json['productPriceInUSD']),
       paymentType: json['paymentType'],
       productNameBn: json['productNameBn'],
       orderId: json['orderId'],

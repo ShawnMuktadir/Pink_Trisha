@@ -12,8 +12,18 @@ import '../../../account/sub_modules/order_details/components/order_items.dart';
 import '../../../account/sub_modules/order_details/components/order_payment.dart';
 import '../../../account/sub_modules/order_details/components/order_shipping_address.dart';
 
-class OrderSummeryScreen extends StatelessWidget {
+class OrderSummeryScreen extends StatefulWidget {
   const OrderSummeryScreen({super.key});
+
+  @override
+  State<OrderSummeryScreen> createState() => _OrderSummeryScreenState();
+}
+
+class _OrderSummeryScreenState extends State<OrderSummeryScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +31,7 @@ class OrderSummeryScreen extends StatelessWidget {
       builder: (_, WidgetRef ref, __) {
         final controller = ref.read(cartController.notifier);
         final state = ref.watch(cartController);
+
         return GlobalBackground(
           child: GlobalTopLoader(
             isLoading: state.isSSLLoading,
@@ -37,9 +48,11 @@ class OrderSummeryScreen extends StatelessWidget {
                           VerticalSpace(
                             height: 28.h,
                           ),
-                          OrderItemsSection(
-                            cartProducts: state.cartProducts,
-                          ),
+                          if (state.cartProducts.isNotEmpty) ...[
+                            OrderItemsSection(
+                              cartProducts: state.cartProducts,
+                            ),
+                          ],
                           OrderShippingAddress(
                             shippingAddress: state.shippingAddress!,
                           ),

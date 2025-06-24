@@ -1,3 +1,5 @@
+import 'package:pink_by_trisha_app/utils/math_util.dart';
+
 class MyOrderModel {
   int? statusCode;
   String? message;
@@ -37,7 +39,7 @@ class MyOrderData {
   String? status;
   String? address;
   String? addressId;
-  dynamic subTotal;
+  double? subTotal;
 
   MyOrderData({
     this.createdAt,
@@ -64,7 +66,7 @@ class MyOrderData {
     status = json['status'];
     address = json['address'];
     addressId = json['addressId'];
-    subTotal = json['subTotal'];
+    subTotal = parseToDouble(json['subTotal']);
   }
 
   Map<String, dynamic> toJson() {
