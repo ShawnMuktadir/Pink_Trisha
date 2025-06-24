@@ -50,7 +50,6 @@ class GlobalCartItem extends StatelessWidget {
       key: UniqueKey(),
       direction: DismissDirection.endToStart,
       onDismissed: (_) {
-        // onDeleteButtonTap();
         controller.deleteCart(slug);
       },
       background: Padding(

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,7 +21,10 @@ class HomeBestDeals extends ConsumerWidget {
     final controller = ref.read(dashboardController.notifier);
     final state = ref.watch(dashboardController);
     final bestDealProducts = ref.watch(homeController).bestDealProducts;
-
+    debugPrint(
+      'bestDealProducts3 widget top:\n${jsonEncode(bestDealProducts.map((e) => e.toJson()).toList())}',
+      wrapWidth: 1024,
+    );
     return Container(
       width: context.width,
       margin: EdgeInsets.only(top: 30.h),
@@ -50,6 +55,10 @@ class HomeBestDeals extends ConsumerWidget {
                       Widget buildProductCard(int cardIndex) {
                         final product =
                             bestDealProducts[startIndex + cardIndex].product;
+                        debugPrint(
+                          'bestDealProducts2 widget:\n${product?.toJson().toString()}',
+                          wrapWidth: 1024,
+                        );
 
                         return GlobalProductCard(
                           imageUrl: product?.imageUrl,
@@ -68,8 +77,8 @@ class HomeBestDeals extends ConsumerWidget {
                           categoryId: product.categoryId ?? 1,
                           vendorId: product.vendorId,
                           paymentType: product.paymentType ?? "",
-                          isInStock:
-                              product.quantity != null && product.quantity! > 0,
+                          isInStock: product.quantity != null &&
+                              product.quantity! != 0,
                           currentAttributeValueId: [],
                         );
                       }

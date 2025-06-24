@@ -18,6 +18,7 @@ import 'package:pink_by_trisha_app/utils/extension.dart';
 import 'package:pink_by_trisha_app/utils/navigation.dart';
 import 'package:pink_by_trisha_app/utils/styles/k_assets.dart';
 import 'package:pink_by_trisha_app/utils/styles/k_colors.dart';
+
 import '../../module/dashboard/sub_modules/home/sub_modules/product/model/product_list_response.dart';
 
 class GlobalProductCard extends StatefulWidget {
@@ -129,7 +130,7 @@ class _GlobalProductCardState extends State<GlobalProductCard> {
                               children: [
                                 StockStatusWidget(
                                   paymentType: widget.paymentType,
-                                  quantity: widget.quantity ?? 0,
+                                  quantity: widget.quantity!,
                                 ),
                                 SizedBox(
                                   height: 2,
@@ -479,6 +480,14 @@ class StockStatusWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Handle nulls early
+    if (paymentType == null || quantity == null) {
+      debugPrint('StockStatusWidget: Null values received - '
+          'paymentType: $paymentType, '
+          'quantity: $quantity');
+      return const SizedBox();
+    }
+
     if (paymentType == "DVP") {
       return const PreorderShow(); // Pre Order
     } else if (quantity > 0 && paymentType != "DVP") {
