@@ -30,3 +30,22 @@ bool isZero(double? value, {double epsilon = 1e-9}) {
   if (value == null) return true; // Treat null as zero for your logic
   return value.abs() < epsilon;
 }
+
+int safeParseInt(dynamic value, {int fallback = 0}) {
+  try {
+    if (value == null) return fallback;
+
+    if (value is int) return value;
+
+    final str = value.toString().trim();
+
+    if (str.isEmpty) return fallback;
+
+    final parsed = int.tryParse(str);
+    return parsed ?? fallback;
+  } catch (e) {
+    // Optionally log the error
+    debugPrint('safeParseInt error: $e');
+    return fallback;
+  }
+}

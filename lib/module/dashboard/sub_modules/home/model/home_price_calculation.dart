@@ -69,6 +69,7 @@ class PriceCalculationData {
 }
 
 class ReviewPriceSendData {
+  final int customerId;
   final String onDemandCountry;
   final String onDemandProductTypeName;
   final String url;
@@ -88,6 +89,7 @@ class ReviewPriceSendData {
   final String status;
 
   ReviewPriceSendData({
+    required this.customerId,
     required this.onDemandCountry,
     required this.onDemandProductTypeName,
     required this.url,
@@ -109,6 +111,7 @@ class ReviewPriceSendData {
 
   Map<String, dynamic> toMap() {
     return {
+      "customerId": customerId,
       "onDemandCountry": onDemandCountry,
       "onDemandProductTypeName": onDemandProductTypeName,
       "url": url,

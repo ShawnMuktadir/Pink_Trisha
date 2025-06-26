@@ -101,7 +101,7 @@ extension AppUrlExtention on AppUrl {
       case AppUrl.getHomeReviewPrice:
         return 'public/api/v1/on-demand-price/{id}';
       case AppUrl.homeReviewPriceConfirmation:
-        return 'customer/api/v1/on-demand-orders?priceId={priceId}';
+        return '${_baseUrl}customer/api/v1/on-demand-orders?priceId={priceId}';
       case AppUrl.productDetails:
         return 'public/api/v1/products/{slug}';
       case AppUrl.productList:

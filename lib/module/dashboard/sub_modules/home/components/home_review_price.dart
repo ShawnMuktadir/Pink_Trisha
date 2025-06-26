@@ -11,6 +11,7 @@ import 'package:pink_by_trisha_app/utils/view_util.dart';
 
 class HomeReviewPrice extends StatelessWidget {
   const HomeReviewPrice({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Consumer(
@@ -97,12 +98,13 @@ class HomeReviewPrice extends StatelessWidget {
 
 class SingleBorderTextField extends StatelessWidget {
   const SingleBorderTextField({super.key, this.hint, required this.controller});
+
   final String? hint;
   final TextEditingController controller;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      //  color: Colors.yellow,
+    return SizedBox(
       width: double.infinity,
       height: 30,
       child: TextFormField(

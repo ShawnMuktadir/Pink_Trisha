@@ -15,13 +15,22 @@ import 'package:pink_by_trisha_app/utils/extension.dart';
 import 'package:pink_by_trisha_app/utils/styles/k_colors.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final controller = context.read(homeController.notifier);
@@ -65,16 +74,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                 });
                               },
                               child: ListView(
-                                children: const [
-                                  HomeSearch(
+                                controller: _scrollController,
+                                children: [
+                                  const HomeSearch(
                                     hasFilter: false,
                                   ),
-                                  HomeCarouselImages(),
-                                  HomeCategories(),
-                                  HomeBestDeals(),
-                                  HomeTopBrands(),
-                                  HomeExploreProducts(),
-                                  HomeCalculatePrice(),
+                                  const HomeCarouselImages(),
+                                  const HomeCategories(),
+                                  const HomeBestDeals(),
+                                  const HomeTopBrands(),
+                                  const HomeExploreProducts(),
+                                  HomeCalculatePrice(scrollController: _scrollController),
                                 ],
                               ),
                             ),

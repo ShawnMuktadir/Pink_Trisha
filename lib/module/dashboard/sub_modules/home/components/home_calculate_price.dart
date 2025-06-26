@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pink_by_trisha_app/global/widget/global_button.dart';
@@ -14,172 +15,180 @@ import 'package:pink_by_trisha_app/utils/styles/k_colors.dart';
 
 import '../../../../../utils/currency_country_util.dart';
 
-//final List<String> countries = [];
-// final countries = ["BAN", "USA", "UAE"];
-
 class HomeCalculatePrice extends ConsumerWidget {
-  const HomeCalculatePrice({super.key});
+
+  final ScrollController scrollController;
+
+  const HomeCalculatePrice({super.key, required this.scrollController});
 
   @override
   Widget build(BuildContext context, ref) {
-    return Consumer(
-      builder: (_, WidgetRef ref, __) {
-        final state = ref.watch(homeController);
-        final controller = ref.read(homeController.notifier);
+    final state = ref.watch(homeController);
+    final controller = ref.read(homeController.notifier);
 
-        return Container(
-          width: context.width,
-          margin: EdgeInsets.only(top: 30.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: const GlobalText(
-                  str: "Calculate Your Product Price",
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  height: 0.09,
-                ),
-              ),
-              SizedBox(
-                height: 12.h,
-              ),
-              Container(
-                width: context.width,
-                margin: EdgeInsets.symmetric(
-                  horizontal: 20.w,
-                  vertical: 5.h,
-                ),
-                padding: EdgeInsets.symmetric(
-                  horizontal: 20.w,
-                  vertical: 20.h,
-                ),
-                decoration: BoxDecoration(
-                  color: KColor.white.color,
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    return Container(
+      width: context.width,
+      margin: EdgeInsets.only(top: 30.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: const GlobalText(
+              str: "Calculate Your Product Price",
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              height: 0.09,
+            ),
+          ),
+          SizedBox(
+            height: 12.h,
+          ),
+          Container(
+            width: context.width,
+            margin: EdgeInsets.symmetric(
+              horizontal: 20.w,
+              vertical: 5.h,
+            ),
+            padding: EdgeInsets.symmetric(
+              horizontal: 20.w,
+              vertical: 20.h,
+            ),
+            decoration: BoxDecoration(
+              color: KColor.white.color,
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        GlobalText(
-                          str: "Select Country :",
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          height: 0.11,
-                        ),
-                        //  Spacer(),
-                        CountrySelection()
-                      ],
+                    GlobalText(
+                      str: "Select Country :",
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      height: 0.11,
                     ),
-                    SizedBox(
-                      height: 26.h,
-                    ),
+                    //  Spacer(),
+                    CountrySelection()
+                  ],
+                ),
+                SizedBox(
+                  height: 26.h,
+                ),
+                const GlobalText(
+                  str: "Select Product Type",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  height: 0.10,
+                ),
+                SizedBox(
+                  height: 8.h,
+                ),
+                const ProductTypeSelection(),
+                SizedBox(
+                  height: 12.h,
+                ),
+                Row(
+                  children: [
                     const GlobalText(
-                      str: "Select Product Type",
+                      str: "Product Link",
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       height: 0.10,
                     ),
-                    SizedBox(
-                      height: 8.h,
+                    GlobalText(
+                      str: "*",
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: KColor.red.color,
+                      height: 0.10,
                     ),
-                    const ProductTypeSelection(),
-                    SizedBox(
-                      height: 12.h,
-                    ),
-                    Row(
-                      children: [
-                        const GlobalText(
-                          str: "Product Link",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          height: 0.10,
-                        ),
-                        GlobalText(
-                          str: "*",
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: KColor.red.color,
-                          height: 0.10,
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 8.h,
-                    ),
-                    SizedBox(
-                      // height: 48.h,
-                      child: Center(
-                          child: TextField(
-                        enabled: state.reviewPriceResponse == null,
-                        controller: state.productLinkCon,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(color: KColor.border2.color),
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(8),
-                            ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: KColor.border2.color),
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(8),
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: KColor.primary.color),
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(8),
-                            ),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 0, horizontal: 10),
-                        ),
-                      )),
-                    ),
-                    SizedBox(
-                      height: 12.h,
-                    ),
-                    const ProductPriceField(),
-                    SizedBox(
-                      height: 12.h,
-                    ),
-                    const SellerShippingFeeField(),
-                    SizedBox(
-                      height: 12.h,
-                    ),
-                    const WeightField(),
-                    SizedBox(
-                      height: 12.h,
-                    ),
-                    //dimension
-                    DimensionField(),
-                    SizedBox(
-                      height: 25.h,
-                    ),
-                    state.reviewPriceResponse == null
-                        ? GlobalButton(
-                            isLoading: state.isCalculateBtnLoading,
-                            onPressed: () {
-                              controller.reqHomePriceCalculation(context);
-                            },
-                            buttonText: "Calculate")
-                        : const SizedBox(),
-                    state.priceCalculationData != null
-                        ? const HomeReviewPrice()
-                        : const SizedBox.shrink()
                   ],
                 ),
-              ),
-            ],
+                SizedBox(
+                  height: 8.h,
+                ),
+                SizedBox(
+                  // height: 48.h,
+                  child: Center(
+                      child: TextField(
+                    enabled: state.reviewPriceResponse == null,
+                    controller: state.productLinkCon,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: KColor.border2.color),
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(8),
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: KColor.border2.color),
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(8),
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: KColor.primary.color),
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(8),
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 0, horizontal: 10),
+                    ),
+                  )),
+                ),
+                SizedBox(
+                  height: 12.h,
+                ),
+                const ProductPriceField(),
+                SizedBox(
+                  height: 12.h,
+                ),
+                const SellerShippingFeeField(),
+                SizedBox(
+                  height: 12.h,
+                ),
+                const WeightField(),
+                SizedBox(
+                  height: 12.h,
+                ),
+                //dimension
+                DimensionField(),
+                SizedBox(
+                  height: 25.h,
+                ),
+                state.reviewPriceResponse == null
+                    ? GlobalButton(
+                        isLoading: state.isCalculateBtnLoading,
+                        onPressed: () async {
+                          // Hide the keyboard
+                          FocusScope.of(context).unfocus();
+
+                          await controller.reqHomePriceCalculation(context);
+
+                          // Delay slightly to ensure widget is built
+                          Future.delayed(const Duration(milliseconds: 100), () {
+                            scrollController.animateTo(
+                              scrollController.position.maxScrollExtent,
+                              duration: const Duration(milliseconds: 600),
+                              curve: Curves.easeInOut,
+                            );
+                          });
+                        },
+                        buttonText: "Calculate")
+                    : const SizedBox(),
+                state.priceCalculationData != null
+                    ? HomeReviewPrice()
+                    : const SizedBox.shrink()
+              ],
+            ),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 }
@@ -253,31 +262,32 @@ class _DimensionFieldState extends State<DimensionField> {
                   child: Row(
                 children: [
                   ShortTextField(
-                    enabled: state.reviewPriceResponse == null,
+                    enabled: state.isOtherProductType,
                     textEditingController: state.dimensionLengthCon,
                     hint: "Length",
                     focusNode: focusNode1,
                     hasFocus: hasFocus,
+                    isOtherProductType: state.isOtherProductType,
                   ),
                   ShortTextField(
-                    enabled: state.reviewPriceResponse == null,
+                    enabled: state.isOtherProductType,
                     textEditingController: state.dimensionWidthCon,
                     hint: "Width",
                     focusNode: focusNode2,
                     hasFocus: hasFocus,
+                    isOtherProductType: state.isOtherProductType,
                   ),
                   ShortTextField(
-                    enabled: state.reviewPriceResponse == null,
+                    enabled: state.isOtherProductType,
                     textEditingController: state.dimensionHeightCon,
                     hint: "Height",
                     focusNode: focusNode3,
                     hasFocus: hasFocus,
+                    isOtherProductType: state.isOtherProductType,
                   ),
                   Expanded(
-                    //    width: 50.w,
                     child: DropdownButtonFormField<String>(
                       value: state.dimensionUnit ?? state.dimensionUnits.first,
-                      //      hint: const GlobalText(str: "Inc"),
                       items: state.dimensionUnits.map((String unit) {
                         return DropdownMenuItem<String>(
                           value: unit,
@@ -360,10 +370,19 @@ class _WeightFieldState extends State<WeightField> {
                   Expanded(
                     child: TextField(
                       focusNode: focusNode,
-                      enabled: state.reviewPriceResponse == null,
+                      enabled: state.isOtherProductType,
                       controller: state.weightCon,
-                      decoration: const InputDecoration(
+                      style: TextStyle(
+                        color: state.isOtherProductType
+                            ? Colors.white
+                            : Colors.grey,
+                      ),
+                      decoration: InputDecoration(
                         border: InputBorder.none,
+                        filled: true,
+                        fillColor: state.isOtherProductType
+                            ? Colors.white
+                            : Colors.grey.shade200,
                       ),
                     ),
                   ),
@@ -381,7 +400,6 @@ class _WeightFieldState extends State<WeightField> {
                     width: 55,
                     child: DropdownButtonFormField<String>(
                       value: state.weightUnit ?? state.weightUnits.first,
-                      //   hint: GlobalText(str: ""),
                       items: state.weightUnits.map((String unit) {
                         return DropdownMenuItem<String>(
                           value: unit,
@@ -466,6 +484,10 @@ class _SellerShippingFeeFieldState extends State<SellerShippingFeeField> {
                       focusNode: focusNode,
                       enabled: state.reviewPriceResponse == null,
                       controller: state.sellerShippingFeeCon,
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
+                      ],
                       decoration: const InputDecoration(
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.all(0),
@@ -564,6 +586,10 @@ class _ProductPriceFieldState extends State<ProductPriceField> {
                     child: TextField(
                       focusNode: focusNode,
                       enabled: state.reviewPriceResponse == null,
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
+                      ],
                       controller: state.productPriceCon,
                       decoration: const InputDecoration(
                         border: InputBorder.none,
@@ -687,10 +713,11 @@ class CountrySelection extends StatelessWidget {
     final countryCode = currencyToCountryCode[code];
 
     if (countryCode == null) {
-      print("Unknown currency code: $code — using fallback flag.");
+      if (kDebugMode) {
+        print("Unknown currency code: $code — using fallback flag.");
+      }
       return "https://flagcdn.com/w40/un.png"; // fallback flag (e.g. UN)
     }
-
     return "https://flagcdn.com/w40/$countryCode.png";
   }
 }
@@ -749,37 +776,6 @@ class ProductTypeSelection extends StatelessWidget {
   }
 }
 
-// class WeightSelection extends StatelessWidget {
-//   const WeightSelection({super.key}); // Add your weight unit options here
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Consumer(
-//       builder: (_, WidgetRef ref, __) {
-//         final state = ref.watch(homeController);
-//         final controller = ref.read(homeController.notifier);
-//         return
-//       },
-//     );
-//   }
-// }
-
-// class DimensionSelection extends StatelessWidget {
-//   const DimensionSelection({super.key}); // Add your weight unit options here
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Consumer(
-//       builder: (_, WidgetRef ref, __) {
-//         final state = ref.watch(homeController);
-//         final controller = ref.read(homeController.notifier);
-
-//         return;
-//       },
-//     );
-//   }
-// }
-
 class ShortTextField extends StatelessWidget {
   const ShortTextField({
     super.key,
@@ -788,6 +784,7 @@ class ShortTextField extends StatelessWidget {
     required this.enabled,
     required this.focusNode,
     required this.hasFocus,
+    required this.isOtherProductType,
   });
 
   final TextEditingController textEditingController;
@@ -795,6 +792,7 @@ class ShortTextField extends StatelessWidget {
   final bool enabled;
   final bool hasFocus;
   final FocusNode focusNode;
+  final bool isOtherProductType;
 
   @override
   Widget build(BuildContext context) {
@@ -805,14 +803,21 @@ class ShortTextField extends StatelessWidget {
             child: TextField(
               focusNode: focusNode,
               enabled: enabled,
-              keyboardType: TextInputType.number,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
+              ],
               controller: textEditingController,
+              style: TextStyle(
+                color: isOtherProductType ? Colors.white : Colors.grey,
+              ),
               decoration: InputDecoration(
                 hintText: hint,
-                hintStyle: TextStyle(
-                  fontSize: 16,
-                ),
+                hintStyle: const TextStyle(fontSize: 16),
                 border: InputBorder.none,
+                filled: true,
+                fillColor:
+                    isOtherProductType ? Colors.white : Colors.grey.shade200,
               ),
             ),
           ),

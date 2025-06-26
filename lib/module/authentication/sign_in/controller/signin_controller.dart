@@ -210,67 +210,6 @@ class SignInController extends StateNotifier<SignInState> {
     print("Step 19: Function completed.");
   }
 
-  /*Future<void> reqSignInWithGoogle() async {
-    try {
-      print("Step 1: Function started");
-
-      final GoogleSignIn googleSignIn = GoogleSignIn(
-        scopes: ['email', 'profile'],
-      );
-
-      // Check if user is already signed in
-      final bool isGoogleLoggedIn = await googleSignIn.isSignedIn();
-      print("Step 2: Already signed in? $isGoogleLoggedIn");
-
-      if (isGoogleLoggedIn) {
-        await googleSignIn.signOut();
-        print("Step 3: Signed out existing session");
-      }
-
-      // Attempt to sign in
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-
-      if (googleUser == null) {
-        print("Step 4: Google sign-in was canceled by the user.");
-        return;
-      }
-
-      print("Step 5: Google Sign-In successful");
-      print("User Name: ${googleUser.displayName}");
-      print("User Email: ${googleUser.email}");
-      print("Profile Picture: ${googleUser.photoUrl}");
-
-      // Stop loading state
-    } catch (e) {
-      print("Step 6: Exception occurred -> $e");
-    }
-    print("Step 7: Function completed.");
-  }*/
-
-  /*Future<void> reqSignInWithGoogle() async {
-    try {
-      final GoogleSignIn googleSignIn = GoogleSignIn();
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-
-      if (googleUser == null) {
-        print("User canceled the sign-in");
-        return;
-      }
-
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final OAuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
-
-      print("User signed in: ${userCredential.user?.displayName}");
-    } catch (e) {
-      print("Error signing in with Google: $e");
-    }
-  }*/
-
 
   //
   // Future<void> reqSignInWithFB() async {

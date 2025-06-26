@@ -15,7 +15,6 @@ class AccountSubtitle extends ConsumerStatefulWidget {
 }
 
 class _AccountSubtitleState extends ConsumerState<AccountSubtitle> {
-
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(profileController);

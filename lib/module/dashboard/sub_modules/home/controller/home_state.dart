@@ -184,4 +184,9 @@ class HomeState {
       responsePriceId: responsePriceId,
     );
   }
+
+  bool get isOtherProductType {
+    final name = selectedProductType?.name?.toLowerCase().trim();
+    return ['other', 'others'].contains(name);
+  }
 }

@@ -16,6 +16,10 @@ import 'package:pink_by_trisha_app/utils/enum.dart';
 import 'package:pink_by_trisha_app/utils/extension.dart';
 import 'package:pink_by_trisha_app/utils/view_util.dart';
 
+import '../../../../../constant/constant_key.dart';
+import '../../../../../data_provider/pref_helper.dart';
+import '../../../../../utils/math_util.dart';
+
 final homeController =
     StateNotifierProvider<HomeController, HomeState>((ref) => HomeController());
 
@@ -134,7 +138,9 @@ class HomeController extends StateNotifier<HomeState> {
         onDemandProductTypeId: state.selectedProductType!.id!,
         productPrice: double.parse(state.productPriceCon.text.trim()),
         sellerShippingFee: double.parse(state.sellerShippingFeeCon.text.trim()),
-        weight: double.parse(state.weightCon.text.trim()),
+        weight: state.weightCon.text.isNotEmpty
+            ? double.parse(state.weightCon.text.trim())
+            : 0.0,
         weightUnit: state.weightUnit ?? state.weightUnits[0],
       );
 
@@ -180,16 +186,25 @@ class HomeController extends StateNotifier<HomeState> {
     try {
       final url = AppUrl.homeReviewPrice.url;
       final ReviewPriceSendData sendData = ReviewPriceSendData(
+        customerId: safeParseInt(PrefHelper.getString(AppConstant.USER_ID.key)),
         onDemandCountry: state.selectedCountry?.name ?? "",
         onDemandProductTypeName: state.selectedProductType?.name ?? "",
         productPrice: double.parse(state.productPriceCon.text.trim()),
         productPriceUnit: state.selectedCountry?.currencyISOCode ?? "",
-        weight: double.parse(state.weightCon.text.trim()),
+        weight: state.weightCon.text.isNotEmpty
+            ? double.parse(state.weightCon.text.trim())
+            : 0.0,
         weightUnit: state.weightUnit ?? "",
         sellerShippingFee: double.parse(state.sellerShippingFeeCon.text.trim()),
-        length: int.parse(state.dimensionLengthCon.text.trim()),
-        width: int.parse(state.dimensionWidthCon.text.trim()),
-        height: int.parse(state.dimensionHeightCon.text.trim()),
+        length: state.dimensionLengthCon.text.isNotEmpty
+            ? int.parse(state.dimensionLengthCon.text.trim())
+            : 0,
+        width: state.dimensionWidthCon.text.isNotEmpty
+            ? int.parse(state.dimensionWidthCon.text.trim())
+            : 0,
+        height: state.dimensionHeightCon.text.isNotEmpty
+            ? int.parse(state.dimensionHeightCon.text.trim())
+            : 0,
         dimensionUnit: state.dimensionUnit ?? "",
         itemPrice: double.parse(state.itemPriceCon.text.trim()),
         shippingFee: double.parse(state.shippingFeeCon.text.trim()),
@@ -232,16 +247,25 @@ class HomeController extends StateNotifier<HomeState> {
       final url = AppUrl.homeReviewPriceConfirmation.url.replaceFirst(
           '{priceId}', state.reviewPriceResponse!.data!.id!.toString());
       final ReviewPriceSendData sendData = ReviewPriceSendData(
+        customerId: safeParseInt(PrefHelper.getString(AppConstant.USER_ID.key)),
         onDemandCountry: state.selectedCountry?.name ?? "",
         onDemandProductTypeName: state.selectedProductType?.name ?? "",
         productPrice: double.parse(state.productPriceCon.text.trim()),
         productPriceUnit: state.selectedCountry?.currencyISOCode ?? "",
-        weight: double.parse(state.weightCon.text.trim()),
+        weight: state.weightCon.text.isNotEmpty
+            ? double.parse(state.weightCon.text.trim())
+            : 0.0,
         weightUnit: state.weightUnit ?? "",
         sellerShippingFee: double.parse(state.sellerShippingFeeCon.text.trim()),
-        length: int.parse(state.dimensionLengthCon.text.trim()),
-        width: int.parse(state.dimensionWidthCon.text.trim()),
-        height: int.parse(state.dimensionHeightCon.text.trim()),
+        length: state.dimensionLengthCon.text.isNotEmpty
+            ? int.parse(state.dimensionLengthCon.text.trim())
+            : 0,
+        width: state.dimensionWidthCon.text.isNotEmpty
+            ? int.parse(state.dimensionWidthCon.text.trim())
+            : 0,
+        height: state.dimensionHeightCon.text.isNotEmpty
+            ? int.parse(state.dimensionHeightCon.text.trim())
+            : 0,
         dimensionUnit: state.dimensionUnit ?? "",
         itemPrice: double.parse(state.itemPriceCon.text.trim()),
         shippingFee: double.parse(state.shippingFeeCon.text.trim()),
@@ -314,7 +338,14 @@ class HomeController extends StateNotifier<HomeState> {
   }
 
   void onProductTypeDropdownChange({required CountryProductType? data}) {
-    state = state.copyWith(selectedProductType: data);
+    state = state.copyWith(
+      selectedProductType: data,
+      // optionally reset weight/dimension when changing to 'Others'
+      weightCon: TextEditingController(text: ''),
+      dimensionLengthCon: TextEditingController(text: ''),
+      dimensionWidthCon: TextEditingController(text: ''),
+      dimensionHeightCon: TextEditingController(text: ''),
+    );
   }
 
   void onCategoryChange({required FeaturedCategory? data}) {
