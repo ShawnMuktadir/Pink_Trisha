@@ -372,9 +372,13 @@ class _WeightFieldState extends State<WeightField> {
                       focusNode: focusNode,
                       enabled: state.isOtherProductType,
                       controller: state.weightCon,
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
+                      ],
                       style: TextStyle(
                         color: state.isOtherProductType
-                            ? Colors.white
+                            ? Colors.black
                             : Colors.grey,
                       ),
                       decoration: InputDecoration(
@@ -809,7 +813,7 @@ class ShortTextField extends StatelessWidget {
               ],
               controller: textEditingController,
               style: TextStyle(
-                color: isOtherProductType ? Colors.white : Colors.grey,
+                color: isOtherProductType ? Colors.black : Colors.grey,
               ),
               decoration: InputDecoration(
                 hintText: hint,

@@ -197,13 +197,13 @@ class HomeController extends StateNotifier<HomeState> {
         weightUnit: state.weightUnit ?? "",
         sellerShippingFee: double.parse(state.sellerShippingFeeCon.text.trim()),
         length: state.dimensionLengthCon.text.isNotEmpty
-            ? int.parse(state.dimensionLengthCon.text.trim())
+            ? safeParseInt(state.dimensionLengthCon.text.trim())
             : 0,
         width: state.dimensionWidthCon.text.isNotEmpty
-            ? int.parse(state.dimensionWidthCon.text.trim())
+            ? safeParseInt(state.dimensionWidthCon.text.trim())
             : 0,
         height: state.dimensionHeightCon.text.isNotEmpty
-            ? int.parse(state.dimensionHeightCon.text.trim())
+            ? safeParseInt(state.dimensionHeightCon.text.trim())
             : 0,
         dimensionUnit: state.dimensionUnit ?? "",
         itemPrice: double.parse(state.itemPriceCon.text.trim()),
@@ -258,13 +258,13 @@ class HomeController extends StateNotifier<HomeState> {
         weightUnit: state.weightUnit ?? "",
         sellerShippingFee: double.parse(state.sellerShippingFeeCon.text.trim()),
         length: state.dimensionLengthCon.text.isNotEmpty
-            ? int.parse(state.dimensionLengthCon.text.trim())
+            ? safeParseInt(state.dimensionLengthCon.text.trim())
             : 0,
         width: state.dimensionWidthCon.text.isNotEmpty
-            ? int.parse(state.dimensionWidthCon.text.trim())
+            ? safeParseInt(state.dimensionWidthCon.text.trim())
             : 0,
         height: state.dimensionHeightCon.text.isNotEmpty
-            ? int.parse(state.dimensionHeightCon.text.trim())
+            ? safeParseInt(state.dimensionHeightCon.text.trim())
             : 0,
         dimensionUnit: state.dimensionUnit ?? "",
         itemPrice: double.parse(state.itemPriceCon.text.trim()),
@@ -292,7 +292,8 @@ class HomeController extends StateNotifier<HomeState> {
             log('Model Response: ${reviewPriceConfirmationResponse.statusCode}');
             if (reviewPriceConfirmationResponse.statusCode == 200) {
               log("${reviewPriceConfirmationResponse.message}");
-              ViewUtil.SSLSnackbar("Order Confirmed.");
+              ViewUtil.SSLSnackbar(
+                  "Thank you for your ordering, we will get back to you soon.");
 
               // set the state null of   priceCalculationData, reviewPriceResponse here
               state = state.makeNullableCalculation();
