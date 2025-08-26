@@ -1,30 +1,10 @@
-def localProperties = new Properties()
-def localPropertiesFile = rootProject.file('local.properties')
-if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader ->
-        localProperties.load(reader)
-    }
+plugins {
+    id "com.android.application"
+    id "org.jetbrains.kotlin.android"
+    // Must come after Android & Kotlin
+    id "dev.flutter.flutter-gradle-plugin"
+    id "com.google.gms.google-services"
 }
-
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-if (flutterRoot == null) {
-    throw GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
-}
-
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
-//if (flutterVersionCode == null) {
-flutterVersionCode = localProperties.getProperty('flutter.versionCode', '5')
-//}
-
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
-if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
-}
-
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-apply plugin: 'com.google.gms.google-services'
 
 def keystorePropertiesFile = rootProject.file("key.properties")
 def keystoreProperties = new Properties()
@@ -34,68 +14,73 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace "com.pinktrisha.app2025release"
-    compileSdkVersion 35
-    ndkVersion flutter.ndkVersion
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = '17'
-    }
-
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
+    // Either rely on Flutter's value or pin explicitly.
+    // compileSdk = flutter.compileSdkVersion
+    compileSdk = 35
+    ndkVersion = flutter.ndkVersion
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.pinktrisha.app2025release"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion 23
-        targetSdkVersion 34
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        minSdk = 23
+        targetSdk = 34
+
+        // Use Flutter’s version props if present, fallback otherwise.
+        versionCode = (project.findProperty("flutter.versionCode") ?: "5").toInteger()
+        versionName = (project.findProperty("flutter.versionName") ?: "1.0")
+
         multiDexEnabled true
     }
 
     signingConfigs {
         release {
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
+            if (keystorePropertiesFile.exists()) {
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+            }
         }
     }
 
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            signingConfig = signingConfigs.release
             shrinkResources false
             zipAlignEnabled false
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
+        debug { }
     }
 
+    compileOptions {
+        // Safe with AGP 8.2.2 even if your JDK is 21
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+    sourceSets {
+        main.java.srcDirs += "src/main/kotlin"
+    }
+
+    // Keep if you need it
     configurations.all {
-        exclude group: 'com.google.android.play', module: 'core-common'
+        exclude group: "com.google.android.play", module: "core-common"
     }
 }
 
 flutter {
-    source '../..'
+    source = "../.."
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.22"
     implementation "androidx.core:core-ktx:1.12.0"
-    implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.2'
+    implementation "androidx.multidex:multidex:2.0.1"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.2"
     implementation "androidx.activity:activity-ktx:1.8.0"
 }
-
-
